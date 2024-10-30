@@ -1,0 +1,359 @@
+\documentclass{article}
+
+\usepackage{math_packages}
+\usepackage{user_commands}
+
+
+\begin{document}
+\begin{center}
+    \textbf{Computable Analysis toolkit}
+\end{center}
+
+All the definitions that follow are directly taken from the book \cite{keri1991realcomplexity}. We specify on which page the definition is given with brackets, for example we write $\{12\}$ for page 12.
+
+\section{Questions}
+
+\section{Basics in Discrete Complexity Theory}
+
+\subsection{Deterministic computation}
+
+$\{13\}$ In this book, Turing machines are described to have multiple states and tapes, with two distinguished states (input and halting state), and two distinguished tapes: a read-only input tape, and a write-only output tape. They also can only move right or left (they cannot stay on the same cell).
+
+$\{14\}$ A recognizer is a Turing machine that has two different halting states: an accepting state, and a rejecting state. For such a machine, we denote by $L(M)$ the set of strings for which the machine halts in the accepting state.
+
+$\{14\}$ $\tme_M(s)$ is the number of steps that the machine $M$ makes before halting on input $s \in \Gamma^\ast$. $\spc_M(s)$ is the number of cells \textit{that are not on the input and output tapes} that the machine $M$ visits before halting on input $s \in \Gamma^\ast$. We define, for a machine $M$ its time and space complexity functions as 
+\begin{align}
+    t_M(n) := \max \{\tme_M(s) : s \in \Gamma^n \},\\
+    s_M(n) := \max \{\spc_M(s) : s \in \Gamma^n \}.
+\end{align}
+For a computable set $A$, it is said to have time (space) complexity $\psi : \NN \to \NN$ if there exists a Turing machine $M$ computing $A$ such that $t_M(n) \leq \psi(n)$ ($s_M(n) \leq \psi(n)$). The complexity of a computable function $\phi$ is defined analogously. $\{15\}$ We say that a computable set (function) $A$ ($\psi$) is computable in polynomial time if $\psi$ is a polynomial. $\Pb$ is the class of polynomial-time computable sets, and $\FPb$ is the class of polynomial-time computable functions.
+
+$\{15\}$ \textbf{Conjecture: extended Church-Turing thesis.} For every two reasonable computation model, the time and space complexity of a given problem differ at most of a polynomial factor.
+
+
+\subsection{Nondeterministic computation}
+
+$\{15\}$ In this book, nondeterministic Turing machines are described as Turing machines which transition function maps to a subset of all possible transitions.
+
+$\{16\}$ $A \subset \Gamma^\ast$ is recognized by a ND Turing machine $M$ if there exists at least one computation statring at $s$ path that halts in accepting state iff $s \in A$.
+
+$\{16\}$ $\tme_M(s)$ is the number of steps that the machine $M$ makes before at least one accepting computation path halts on input $s \in \Gamma^\ast$. $\spc_M(s)$ is the number of cells that the machine $M$ visits before at least one accepting computation path halts on input $s \in \Gamma^\ast$. We define, for a machine $M$ its time and space complexity functions as 
+\begin{align}
+    t_M(n) := \max \{\tme_M(s) : M \text{ accepts } s, \ s \in \Gamma^n \},\\
+    s_M(n) := \max \{\spc_M(s) : M \text{ accepts } s, \ s \in \Gamma^n \}.
+\end{align}
+$\NPb$ is the class of sets accepted by polynomial time nondeterministic Turing machines.
+
+$\{17\}$ More sets are introduced, with the obvious meaning: $\LSb$, $\NLSb$, $\Eb$, $\PEb$, $\PSb$, $\NSb$, $\FLSb$.
+\begin{center}
+    \includegraphics[width=0.8\textwidth]{images/IMG_8BF5F17A26E3-1.jpeg}
+\end{center}
+
+\subsection{Reducibilities}
+
+\begin{flexidefinition}{D1.1 - $\{18\}$}[Many-to-one reducibility]
+    A set $A$ is polynomial-time many-to-one reducible to a set $B$, written $A \leq_m^P B$, if there exists $\phi \in \FPb$ such that for all $s \in \Gamma^\ast$, $s \in A \iff \phi(s) \in B$.
+\end{flexidefinition} 
+
+\begin{flexidefinition}{D1.2 - $\{18\}$}[Hardness and completeness]
+    A set $A$ is $\leq_m^P$-hard for the class $\CC$ if for every $B \in \CC$, $B \leq_m^P A$. A set $A$ is $\leq_m^P$-complete for the class $\CC$, or alternatively $\CC$-complete if $A \in \CC$ and $A$ is $\leq_m^P B$-hard for the class $\CC$. 
+\end{flexidefinition} 
+
+\begin{flexidefinition}{$\{19\}$}[Log-space many-to-one reducible]
+    We say that a set $A$ is log-space many-to-one reducible to a set B, written $A \leq^{LS}_m B$, if there exists $\phi \in \FLSb$ such that for all $s \in \Gamma^\ast$, $s \in A \iff \phi(s) \in B$. We define $\leq_m^{LS}$-hardness and $\leq_m^{LS}$-completeness analogously.
+\end{flexidefinition}
+
+
+\begin{flexidefinition}{$\{20\}$}[Oracle Turing machine]
+    An oracle Turing machine is an ordinary Turing machine, with an extra tape, called the query tape, and two extra states, called the query state and answer state, and associated with a polynomially length-bounded function $\phi : \{0,1\}^\ast \to \{0,1\}^\ast$, i.e. $\ell(\phi(s)) \leq p(\ell(s))$ $\{22\}$. In query state, it reads the string $t \in \{0,1\}^\ast$ on the query tape, computes $\phi(t)$, and replaces $t$ by $\phi(t)$ on query tape, and places the head of the Turing machine on the leftmost nonempty cell of the query tape.
+\end{flexidefinition}
+
+$\{20\}$ If $M$ is a recognizer, we write $L(M,\phi)$ the set of string for which $M^\phi$ halts in accepting state.
+
+$\{21\}$ $\tme_{M^\phi}(s)$ counts all the regular steps of the Turing machine, but all the steps in the query state count only as one step. $\spc_{M^\phi}(s)$ counts the cell that the Turing machine visits, except the ones on the input, output and query tape. We define
+\begin{align}
+    t_M(\phi, n) := \max \{\tme_{M^\phi}(s) : s \in \Gamma^n \},\\
+    s_M(\phi, n) := \max \{\spc_{M^\phi}(s) : s \in \Gamma^n \}.
+\end{align}
+An oracle TM is said to run in time (space) $\psi: \NN \to \NN$ if $t_M(\phi,\cdot) \leq \psi(\cdot)$ for all $\phi$.
+
+\begin{flexidefinition}{D1.3 - $\{22\}$}[Turing reducibility]
+    A set $A$ is polynomial-time Turing reducible to a set $B$, written $A \leq_T^P B$, if there is a polynimial time oracle TM $M$ which computes $A$ when $B$ is used as oracle.
+\end{flexidefinition}
+
+\begin{flexidefinition}{D1.4 - $\{22\}$}[Hardness and completeness]
+    A set $A$ is $\leq_T^P$-hard for the class $\CC$ if for every $B \in \CC$, $B \leq_T^P A$. A set $A$ is $\leq_T^P$-complete for the class $\CC$, or alternatively $\CC$-complete if $A \in \CC$ and $A$ is $\leq_T^P B$-hard for the class $\CC$. 
+\end{flexidefinition} 
+
+\begin{flexilemma}{P1.5 - $\{22\}$}[Obvious statements]
+    \begin{enumerate}[label=(\alph*)]
+        \item $A \leq_m^P B \Rightarrow A \leq_T^P B$.
+        \item $\leq_m^P-$hardness implies $\leq_T^P-$hardness.
+        \item If $A \leq_T^P B$ and $B \in P$ then $A \in P$.
+        \item If $A \leq_m^P B$ and $B \in NP$ then $A \in NP$.
+    \end{enumerate}
+\end{flexilemma}
+
+\subsection{Polynomial hierarchy}
+
+$\{23\}$ Definition of nondeterministic oracle Turing machines. We let $\Pb(\CC)$ to be the class of set that are accepted by polynomial-time deterministic oracle Turing machines using some $A \in \CC$ as oracle. We define accordingly $\NPb(\CC)$, $\PSb(\CC)$, etc. with the obvious meaning.
+
+$\{23\}$ Let $\CC$ be a class of sets, we let $\co C$ be the class of sets such that $\bar A \in \CC$.
+
+\begin{flexidefinition}{D1.6 - $\{23\}$}[Polynomial-time hierarchy]
+    \begin{align}
+        \Sigma_0^P &= \Pi_0^P = \Delta_0^P = P\\
+        \Sigma_{k+1}^P &= \NPb(\Sigma_k^P)\\
+        \Pi_{k}^P &= \co \Sigma_{k}^P\\
+        \Delta_{k+1}^P &= \Pb(\Sigma_k^P)\\
+        \PH &= \bigcup_{k=0}^\infty \Sigma_k^P.
+    \end{align}
+\end{flexidefinition}
+
+\begin{flexilemma}{P1.7 - $\{23\}$}[First inclusions]
+    \begin{equation}
+        \Sigma_k^P \cup \Pi_k^P \subseteq \Delta_{k+1}^P \subseteq \Sigma_{k+1}^P \cap \Pi_{k+1}^P \subseteq \PSb.
+    \end{equation}
+\end{flexilemma}
+
+\begin{flexitheorem}{T1.10 - $\{24\}$}[Formula for elements in $\Sigma_k^P$]
+    $A \in \Sigma_k^P \forall s \in A$ iff there exists a polynomial-time computable predicate $R$, and $p$ a polynomial such that
+    \begin{equation}
+        s \in A \iff \exists t_1 \forall t_2 \exists t_3 \ldots \forall t_{k-1} \exists t_{k} R(s,t_1,t_2,\ldots,t_k),
+    \end{equation}
+    with $\ell(t_1),\ell(t_2),\ldots,\ell(t_k) \leq p(\ell(s))$.
+\end{flexitheorem}
+
+\subsection{Relativization}
+
+\begin{flexidefinition}{$\{26\}$}[Relativized polynomial-time hierarchy]
+    Let $A$ be a set. We define
+    \begin{align}
+        \Sigma_0^P(A) &= \Pi_0^P(A) = \Delta_0^P(A) = P(A)\\
+        \Sigma_{k+1}^P(A) &= \NPb(\Sigma_k^P(A))\\
+        \Pi_{k}^P(A) &= \co \Sigma_{k}^P(A)\\
+        \Delta_{k+1}^P(A) &= \Pb(\Sigma_k^P(A))\\
+        \PH(A) &= \bigcup_{k=0}^\infty \Sigma_k^P(A).
+    \end{align}
+\end{flexidefinition}
+See Theorem 1.12 for many solutions to P=NP and other similar problems, in relativized version.
+
+$\{26\}$ Let $\SM$ be the set of all subsets of $\{0,1\}^\ast$, and $\Phi : \SM \to \SM$. We say that $\Phi$ is polynomial-time computable if there exists an polynomial-time oracle Turing machine $M$ such that for each $A \in \SM$, $M^A$ accepts $\Phi(A)$. $\{27\}$ We define analogously NP-computable, PSPACE-computable and $\Sigma_k^P$-computable operators. We denote each of these classes $\Pb_{op}$, $\NPb_{op}$, $\PSb_{op}$ and $\Sigma_{k,op}^P$.
+
+\subsection{Probabilistic Complexity Classes}
+
+$\{28\}$ A probabilistic TM is a TM that receives an input $s \in \{0,1\}^\ast$ and a sequence of coin flips $\alpha \in \{0,1\}^\infty$. The transfert function of the machine can sometimes have up to two choices available. In the case that the machine has a choice, it is made by reading the first bit of $\alpha$. Then, this first bit is popped.
+
+$\{28\}$ We suppose that $\alpha \in \{0,1\}^\infty$ is generated according to the uniform distribution on $\{0,1\}^\infty$. We say that $M$ accepts $s$ if the probability of accepting $s$ is greater than $1/2$. $\PPb$ is the set of sets accepted by polynomial-time probabilistic Turing machines. $\BPPb$, $\RPb$ and $\ZPPb$ are on page $\{29\}$.
+
+Many more results are on page $\{30\}$.
+
+\subsection{Complexity of counting}
+
+\begin{flexidefinition}{D1.18 - $\{31\}$}[Number of paths]
+    A function $\phi : \Gamma^\ast \to \NN$ is in the class $\# P$ if there is a polynomial-time nondeterministic TM $M$ such that for each $s \in \Gamma^\ast$, $\phi(s)$ is the number of accepting computations of $M(s)$.
+\end{flexidefinition}
+
+Many results on that $\{31-32\}$.
+
+\subsection{One-way functions}
+
+\begin{flexidefinition}{$\{32\}$}[One way function]
+    $\phi$ is polynomially honest if $\ell(s) \leq p(\ell(\phi(s)))$. A one way function is a polynomially honest functions that is polynomial time computable, one-to-one, and those all inverses is not polynomial-time computable.
+\end{flexidefinition}
+
+\begin{flexidefinition}{D1.22- $\{33\}$}[Unambiguous polynomial-time]
+    $A \in \UPb$ if there is a polynomial-time nondeterministic Turing machine $M$ computing $A$ with exactly one accepting computation path. $\Pb \neq \UPb$ is equivalent to the existence of one-way functions.
+\end{flexidefinition}
+
+Relativized results on $\UPb$ are discussed in page $\{34\}$.
+
+\subsection{Polynomial-size circuits and sparse sets}
+
+\begin{flexidefinition}{D1.28 - $\{36\}$}[Advice functions]
+    Let $\CC$ be a class of sets and $\Phi$ be a class of functions $\Phi : \NN \to \Gamma^\ast$. The class $\CC / \Phi$ is the class of sets $A$ for which there eixt a set $B \in \CC$ and a function $\phi \in \Phi$ such that for all $s \in \Gamma^\ast$, $s \in A \iff \langle s, \phi(\ell(s)) \rangle \in B$. 
+\end{flexidefinition}
+
+\begin{definition}{$\{36\}$}[Sparse set, tally set]
+    A set $S \subset \Gamma^\ast$ is sparse if there is a polynomial $p$ such that $\# \{s \in S : \ell(s) = n\} \leq p(n)$. A tally set is a set $T \subset \{0\}^\ast$.  
+\end{definition}
+
+\begin{flexidefinition}{P1.29 - $\{36\}$}[Characterisation of polynomial circuit sets]
+    \begin{equation}
+        \Pb(SPARSE) = \Pb(TALLY) = \Pb/\poly
+    \end{equation}
+\end{flexidefinition}
+
+Many final discussions on relativized P = NP, and sparse sets used as P = NP bridges are on pages $\{37-39\}$.
+
+\section{Computational Complexity of Real Functions}
+
+\subsection{Computational complexity of real numbers}
+
+$\{41\}$ We denote by $\DD$ the dyadic numbers. $\ell(s)$ is the total length of a representation $s$ of a dyadic number, and $\preci (s)$ is the length after the dot.
+
+\begin{flexidefinition}{D2.1 - $\{42\}$}[Representations of real numbers]
+    \begin{enumerate}[label = (\alph*)]
+        \item A function $\phi : \NN \to \DD$ is said to binary converge towards $x \in \R$ if $\prec(\phi(n)) = n$ and $|\phi(n) - x| \leq 2^{-n}$. $CF_x$ is the set of all functions that binary converge towards $x$.
+        \item $LC_x = \{d \in D | d < x\}$ is called the Dedekind left-cut of $x$.
+        \item $BE_x : \NN \to \{0,1\}$ is such that 
+        \begin{equation}
+           x =\sum_{i=1}^\infty BE_x(i) 2^{-i}.
+        \end{equation}
+    \end{enumerate}
+\end{flexidefinition}
+$\{43\}$ A real number $x$ is computable $\iff$ there is a computable funcion in $CF_x$ $\iff$ $LC_x$ is computable $\iff$ $BE_x$ is computable.
+
+$\{44\}$ Computable real numbers form a closed field. Equality testing is incomputable.
+
+$\{47\}$ We defined $\Pb_{CF}$, $\Pb_{BE}$, $\Pb_{LC}$ to be the polynomial-time complexity classes associated with the CF, BE and LC representations. It is shown that $P_{LC} = P_{BE} \underset{\neq}{\subset} P_{CF}$. $\{49\}$ Moreover, $P_{CF}$ is a closed field, whicle $P_{LC} = P_{BE}$ is not even closed under addition. So CF is the best representation to study real numbers complexity.
+
+\subsection{Computable real functions}
+
+\begin{flexidefinition}{D2.11 - $\{51\}$}[Computable real function]
+    Let $f : \R \to \R$. $f$ is computable if there exists an oracle Turing machine $M$ such that for all $x \in \R$ and all $\phi \in CF_x$, $n \mapsto M^\phi(0^n) \in CF_{f(x)}$. We can retrict the notion of computability on interval.
+\end{flexidefinition}
+
+\begin{flexidefinition}{D2.12 - $\{52\}$}[Modulus functions]
+    Let $f : [a,b] \to \R$ be a continuous function. A function $m : \NN \to \NN$ is said to be a modulus function of $f$ if for all $n \in \NN$, and all $x,y \in [a,b]$, we have
+    \begin{equation}
+        |x - y| \leq 2^{-m(n)} \Rightarrow |f(x) - f(y)| \leq 2^{-n}.
+    \end{equation}
+\end{flexidefinition}
+
+\begin{flexitheorem}{T2.13 - $\{52\}$}[Uniform modulus theorem]
+    If $f : [a,b] \to \R$ is computable, then $f$ is continuous and has a recursive modulus functions.
+\end{flexitheorem}
+
+\begin{flexitheorem}{C2.14 - $\{53\}$}[Characterization of Computable functions]
+    A real function $f:[a,b] \to \R$ is computable iff there exists two recursive functions $m : \NN \to \NN$ and $\psi : (\DD \cap [a,b]) \times \NN \to \DD$ such that 
+    \begin{enumerate}[label = (\roman*)]
+        \item $m$ is a modulus for $f$,
+        \item for all $d \in D \cap [a,b]$ and all $n \in \NN$, $|\psi(d,n) - f(d)| \leq 2^{-n}$.
+    \end{enumerate}
+\end{flexitheorem}
+
+\subsection{Complexity of real functions}
+
+\begin{flexidefinition}{D2.18 - $\{57\}$}[Time Complexity of Real functions]
+    Let $G$ be a closed bounded interval or $\R$. Let $M$ be an oracle Turing machine, and let 
+    \begin{equation}
+        \tme'_M(x,n) := \max \{\tme_M(\phi,n) : \phi \in CF_x \}, 
+        \ \ \forall x \in G, \forall n \in \NN.
+    \end{equation}
+    Let $f : G \to \R$ be a computable function. We say that the time complexity of $f$ on $G$ is bounded by a function $t : G \times \NN \to \NN$ if there exists an oracle TM $M$ which computes $f$, such that for all $x \in G$ and all $n > 0$,
+    \begin{equation}
+        \tme'_M(x,n) \leq t(x,n).
+    \end{equation}
+    We say that $f$ has uniform time complexity $t'(n)$ if the time complexity $t(x,n)$ of $f$ satisfies $t(x,n) \leq t'(n)$, for all $x \in G$. We say that $f$ has nonuniform time complexity $t'(n)$ if the time complexity $t(x,n)$ of $f$ satisfies $t(x,n) \leq t'(n)$, for all $x \in [-2^n,2^n] \cap G$. 
+\end{flexidefinition}
+
+\begin{flexidefinition}{D2.18 - $\{58\}$}[Space Complexity of Real functions]
+    Let $f : G \to \R$ be a computable function. We say that the space complexity of $f$ on $G$ is bounded by a function $s : G \times \NN \to \NN$ if there exists an oracle TM $M$ which computes $f$, such that for all $x \in G$ and all $n > 0$,
+    \begin{equation}
+        \spc_M(\phi,n) \leq s(x,n), \ \forall \phi \in CF_x.
+    \end{equation}
+    We say that $f$ has uniform space complexity $s'(n)$ if the time complexity $s(x,n)$ of $f$ satisfies $s(x,n) \leq s'(n)$, for all $x \in G$.
+\end{flexidefinition}
+
+We denote by $\Pb_{C[a,b]}$ the set of polynomial-time computable real functions.
+
+\begin{flexitheorem}{T2.19 - $\{58\}$}[Time complexity and modulus]
+    If $f : [a,b] \to \R$ has uniform time complexity $t(n)$, then $t(n+2)$ is a modulus function for $f$.
+\end{flexitheorem}
+
+Generalizations to multiple variables appear on pages $\{58-62\}$. Especially, the generalization implies that there is one oracle for each input variable. However, the characterization is NOT in terms of linear functions: it is a polynomial of degree 1.
+
+\subsection{Recursively Open sets}
+
+\begin{flexidefinition}{D2.29 - $\{63\}$}[Partial computable real functions]
+    Let $S \subseteq \R$, and $f : S \to \R$. $f$ is said to be partial computable if there exist an oracle TM M such that
+    \begin{enumerate}[label=(\roman*)]
+        \item for all $x \in S$, and all $\phi \in CF_x$, $M^\phi(n)$ halts and $|M^\phi(n) - f(x)| \leq 2^{-n}$, and
+        \item for all $x \notin S$ and all $\phi \in CF_x$, $M^\phi(n)$ does not halt for all $n$.
+    \end{enumerate}    
+\end{flexidefinition}
+
+\begin{flexidefinition}{D2.30 - $\{63\}$}[Recursively open set]
+    A set $S \in \R$ is recursively open if $S = \varnothing$ or if there exists a recursive function $\phi : \NN \to D$ such that
+    \begin{enumerate}[label=(\roman*)]
+        \item for each $n \in \NN$, $\phi(2n) < \phi(2n+1)$, and
+        \item $S = \bigcup_{n=0}^\infty (\phi(2n), \phi(2n+1))$,
+    \end{enumerate}
+    A set $S$ is recursively closed if $\R - S$ is open.
+\end{flexidefinition}
+
+\begin{flexitheorem}{T2.31 - $\{63\}$}[Characterization of recursively opne sets]
+    A set $S \subseteq \R$ is recursively open iff there is a partial computable function $f$ whose domain is $S$
+\end{flexitheorem}
+
+\begin{flexilemma}{C2.32 - $\{64\}$}[Continuity of partial computable functions]
+    Partial computable functions are continuous on their domain.
+\end{flexilemma}
+
+\begin{flexidefinition}{D2.33 - $\{64\}$}[r.e. numbers]
+    A real number $x$ is left computable enumerable (left r.e.) if $(- \infty, x) \cap D$ is r.e., and a real number is right recursively enumerable (right r.e.) if $(x,\infty) \cap D$ is r.e.
+\end{flexidefinition}
+
+\begin{flexitheorem}{T2.34 - $\{65\}$}[Characterization of r.e.o. sets]
+    \begin{enumerate}[label=(\alph*)]
+        \item If $x < y$, $x$ is right r.e. and $y$ is left r.e., then $(x,y)$ is r.e.o.
+        \item If $S \subset \R$ is a recursively open set, then for each component $(x,y)$ of $S$ (i.e., $(x,y) \subseteq S$ but $x \notin S$ and $y \notin S$), $x$ is right r,e, and $y$ is left r.e.
+    \end{enumerate}
+\end{flexitheorem}
+
+\begin{flexidefinition}{D2.35 - $\{67\}$}[Computable functional]
+    A numerical function $F$ on $ D \subset C[0,1]$ is computable if there exists a TM M such that for all $f \in D$, given two oracle $m$ and $\phi$ representing $f$,
+    \begin{equation}
+        |M^{m,\phi}(n) - F(f)| \leq 2^{-n}.
+    \end{equation}
+\end{flexidefinition}
+
+\begin{flexidefinition}{D2.35 - $\{67\}$}[Computable operator]
+    A numerical operator $F$ on $ D \subset C[0,1]$ is computable if there exists a TM M such that for all $f$, and all $x \in [0,1]$, given two oracle $m$ and $\phi$ representing $f$, and $\psi$ representing $x$, then
+    \begin{equation}
+        |M^{m,\phi,\psi}(n) - F(f)(x)| \leq 2^{-n}.
+    \end{equation}
+\end{flexidefinition}
+
+\begin{flexidefinition}{D2.35 - $\{67\}$}[Polynomial-time computable functional]
+    A computable function $F$ is polynomial time if there exists $p,q$ polynomials such that for all $f \in D$ represented by $m,\phi$, $M_F$ computes in time $p(m(0,1,q(n)))$. We define similarly the complexity of operators.
+\end{flexidefinition}
+
+\section{Maximization}
+
+\begin{flexitheorem}{T3.1 - $\{72\}$}[Maximal points of computable functions]
+    Let $S$ be a nonempty subset of $[0,1]$. Then, the following are equivalent
+    \begin{enumerate}[label = (\alph*)]
+        \item $S$ is recursively closed,
+        \item there exists a computable function $f : [0,1] \to \R$ whose maximum points are exactly $S$,
+        \item there exists a polynomial-time computable function $f: [0,1] \to \R$ whose maximum points are exactly $S$.
+    \end{enumerate}
+\end{flexitheorem}
+\begin{flexilemma}{C3.2/3 - $\{75\}$}[Recursiveness of maximum points]
+    Let $f$ be a polynomial-time computable function on $[0,1]$.
+    \begin{enumerate}[label = (\alph*)]
+        \item $f$ has at least oone left r.e. and one right r.e. maximum point,
+        \item If $x$ is an isolated maximum point of $f$, then $x$ is recursive,
+        \item If $f$ has finitely many maximum points, they all are recursive,
+        \item If $f$ has countably infinitely many maximum points, then infinitely many of are recursive.
+    \end{enumerate}
+    However, there exists a polynomial-time computable function $f$ with uncountably many maximum points, all being nonrecursive.
+\end{flexilemma}
+
+\begin{flexidefinition}{$\{76\}$}[Max function]
+    For $\phi : \{0,1\}^\ast \to \{0,1\}^\ast$, we define
+    \begin{align}
+        {\max}_\phi(s) &:= \max \{ \phi(\langle t,s\rangle) : \ell(t) = \ell(s) \},\\
+        {\max}'_\phi(n) &:= \max \{ \phi(\langle t,s\rangle) : \ell(t) = n \}.
+    \end{align}
+\end{flexidefinition}
+\begin{flexitheorem}{P3.4/5 - $\{76\}$}[NP-hardness of maximization]
+    The problem of computaing $\max_\phi$ is $\NPb$-complete, and $\max'_\phi$ is $\NPb_1$-hard.
+\end{flexitheorem}
+In pages \pp{81-99}, the authors establish the notion of NP real numbers, and make links with maximizing polynomial-time computable functions. In pages \pp{100-105}, they establish a hierarchy of function classes by passing to the maximum and minimum, witch establishes a relation with the usual polynomial hierarchy. 
+
+\bibliography{biblio}{}
+\bibliographystyle{alpha}
+
+\end{document}

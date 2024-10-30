@@ -1,0 +1,91 @@
+
+\newcommand\pp[1]{$\{#1\}$}
+
+% sets of complexity
+\newcommand{\Pb}{\boldsymbol{P}}
+\newcommand{\Eb}{\boldsymbol{EXP}}
+\newcommand{\LSb}{\boldsymbol{LOGSPACE}}
+\newcommand{\PSb}{\boldsymbol{PSPACE}}
+\newcommand{\PEb}{\boldsymbol{PEXP}}
+\newcommand{\NPb}{\boldsymbol{NP}}
+\newcommand{\NEb}{\boldsymbol{NEXP}}
+\newcommand{\NLSb}{\boldsymbol{NLOGSPACE}}
+\newcommand{\NSb}{\boldsymbol{NPSPACE}}
+\newcommand{\FPb}{\boldsymbol{FP}}
+\newcommand{\FLSb}{\boldsymbol{FLOGSPACE}}
+\newcommand{\PH}{\boldsymbol{PH}}
+\newcommand{\PPb}{\boldsymbol{PP}}
+\newcommand{\BPPb}{\boldsymbol{BPP}}
+\newcommand{\RPb}{\boldsymbol{RP}}
+\newcommand{\ZPPb}{\boldsymbol{ZPP}}
+\newcommand{\UPb}{\boldsymbol{UP}}
+
+
+
+
+
+%complexity tools
+\newcommand\tme{\ensuremath{\operatorname{time}}}
+\newcommand\spc{\ensuremath{\operatorname{space}}}
+
+\newcommand{\poly}{\operatorname{poly}}
+
+%mathcal
+\newcommand{\CC}{\mathcal{C}}
+\newcommand{\DD}{\mathcal{D}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\QQ}{\mathcal{Q}}
+\newcommand{\ZZ}{\mathcal{Z}}
+\newcommand{\RR}{\mathcal{R}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\SM}{\mathcal{S}}
+
+%others
+\newcommand{\R}{\mathbb{R}}
+
+\newcommand{\preci}{\operatorname{prec}}
+
+\newcommand{\co}{{\bf \operatorname{co-}\hspace{-0.25mm}}}
+
+\newcommand{\limi}[1]{\underset{#1 \to \infty}{\lim}}
+\newcommand{\simp}{\underset{p}{\sim}}
+
+
+
+% Theorems and definitions environments
+
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+
+\newtheoremstyle{flexith}{}{}{\mdseries}{}{\itshape}{}{.5em}{\textit{\textbf{Theorem}}  \thmnumber{#2} (#3).}
+\theoremstyle{flexith}
+
+\newtheorem{flexitheoreminner}{Theorem}
+\newenvironment{flexitheorem}[1]{
+  \renewcommand\theflexitheoreminner{#1}%
+  \flexitheoreminner
+}{\endflexitheoreminner}
+
+\newtheoremstyle{flexide}{}{}{\mdseries}{}{\itshape}{}{.5em}{\textit{\textbf{Definition}}  \thmnumber{#2} (#3).}
+\theoremstyle{flexide}
+
+\newtheorem{flexidefinitioninner}{Definition}
+\newenvironment{flexidefinition}[1]{
+  \renewcommand\theflexidefinitioninner{#1}%
+  \flexidefinitioninner
+}{\endflexidefinitioninner}
+
+\newtheoremstyle{flexile}{}{}{\mdseries}{}{\itshape}{}{.5em}{\textit{\textbf{Lemma}}  \thmnumber{#2} (#3).}
+\theoremstyle{flexile}
+
+\newtheorem{flexilemmainner}{Lemma}
+\newenvironment{flexilemma}[1]{
+  \renewcommand\theflexilemmainner{#1}%
+  \flexilemmainner
+}{\endflexilemmainner}
