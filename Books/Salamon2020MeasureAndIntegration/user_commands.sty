@@ -1,0 +1,53 @@
+\newcommand{\pp}[1]{$\{#1\}$}
+
+\newcommand{\AM}{\mathcal{A}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\QQ}{\mathcal{Q}}
+\newcommand{\ZZ}{\mathcal{Z}}
+\newcommand{\RR}{\mathcal{R}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\TT}{\mathcal{T}}
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\UU}{\mathcal{U}}
+\newcommand{\VV}{\mathcal{V}}
+\newcommand{\SM}{\mathcal{S}}
+
+\newcommand{\N}{\mathbb{N}}
+
+\newcommand{\R}{\mathbb{R}}
+
+\newcommand{\limi}[1]{\underset{#1 \to \infty}{\lim}}
+\newcommand{\simp}{\underset{p}{\sim}}
+\newcommand{\supp}{\operatorname{supp}}
+
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+\newtheoremstyle{flexith}{}{}{\mdseries}{}{\itshape}{}{.5em}{\textit{\textbf{Theorem}}  \thmnumber{#2} (#3).}
+\theoremstyle{flexith}
+
+\newtheorem{flexitheoreminner}{Theorem}
+\newenvironment{flexitheorem}[1]{
+  \renewcommand\theflexitheoreminner{#1}%
+  \flexitheoreminner
+}{\endflexitheoreminner}
+
+\newtheoremstyle{flexide}{}{}{\mdseries}{}{\itshape}{}{.5em}{\textit{\textbf{Definition}}  \thmnumber{#2} (#3).}
+\theoremstyle{flexide}
+
+\newtheorem{flexidefinitioninner}{Definition}
+\newenvironment{flexidefinition}[1]{
+  \renewcommand\theflexidefinitioninner{#1}%
+  \flexidefinitioninner
+}{\endflexidefinitioninner}
+
+\newtheoremstyle{flexile}{}{}{\mdseries}{}{\itshape}{}{.5em}{\textit{\textbf{Lemma}}  \thmnumber{#2} (#3).}
+\theoremstyle{flexile}
+
+\newtheorem{flexilemmainner}{Lemma}
+\newenvironment{flexilemma}[1]{
+  \renewcommand\theflexilemmainner{#1}%
+  \flexilemmainner
+}{\endflexilemmainner}
