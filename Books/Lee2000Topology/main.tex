@@ -1,0 +1,528 @@
+\documentclass{article}
+
+\usepackage{math_packages}
+\usepackage{user_commands}
+
+
+
+\begin{document}
+\begin{center}
+    \textbf{Topology toolkit}
+\end{center}
+
+All the definitions that follow are directly taken from the book \cite{lee2000manifolds}. We specify on which page the definition is given with brackets, for example we write $\{12\}$ for page 12.
+
+\section{Open sets}
+
+\begin{flexidefinition}{$\{18\}$}[Topology]
+    Let $X$ be a set. A collection $\TT$ of subsets of $X$ is called a topology if
+    \begin{enumerate}[label = (\alph*)]
+        \item $\varnothing, X \in \TT$,
+        \item closure under finite intersections: $U_1, \ldots, U_n \in \TT \ \Rightarrow \ U_1 \cap \ldots \cap U_n \in \TT$,
+        \item closure under arbitrary unions: $(U_\alpha) \in \TT \ \Rightarrow \ \bigcup_{\alpha} U_\alpha \in \TT$.
+    \end{enumerate}
+    The elements of $\TT$ are call open sets. $(X, \TT)$ is called a topological space.
+\end{flexidefinition}
+
+\begin{flexidefinition}{$\{18\}$}[Neighborhood]
+    Let $(X,\TT)$ be a topological space. For all $q \in X$, a neighborhood of $q$ is an open set $A \in \TT$ s.t. $q \in A$.
+\end{flexidefinition}
+
+\begin{flexidefinition}{$\{25\}$}[Interior]
+    Let $(X,\TT)$ be a topological space, and $A \subset X$. We define
+    \begin{equation}
+        \operatorname{Int} A := \cup \left\{ U \subset X : U \ is \ open \right\}.
+    \end{equation}
+\end{flexidefinition}
+
+\begin{flexilemma}{Pb2.9 - $\{37\}$}[Disjoint union topology]
+    Let $\{X_\alpha\}_{\alpha \in A}$ be a sequence of disjoint topological spaces. Then, we define a topology on $\cup_{\alpha \in A} X_\alpha$ as being the set which intersection wiht each $X_\alpha$ is open in $X_\alpha$.
+\end{flexilemma}
+
+\section{Closed sets}
+
+\begin{flexidefinition}{$\{24\}$}[Closed set]
+    Let $(X,\TT)$ be a topological space. We say that $A \subset X$ is closed if there exists $U \in \TT$ such that $A = X \backslash U$.
+\end{flexidefinition}
+
+\begin{flexilemma}{$\{24\}$}[Topology of closed sets]
+    Let $(X,\TT)$ be a topological space.
+    \begin{enumerate}
+        \item $\varnothing, X$ are closed,
+        \item Finite unions of closed sets are closed,
+        \item Arbitrary intersections of closed sets are closed.
+    \end{enumerate}
+\end{flexilemma}
+
+\begin{flexidefinition}{$\{25\}$}[Closure, Exterior, Boundary]
+    Let $(X,\TT)$ be a topological space, and $A \subset X$. We define
+    \begin{align}
+        \bar A &:= \cap \left\{ C \subset X : C \ is \ closed \right\},\\
+        \operatorname{Ext} A &:=  X \backslash \bar A\\
+        \partial A &:= X \backslash (\operatorname{Int} A \cup \operatorname{Ext} A )
+    \end{align}
+\end{flexidefinition}
+
+\begin{flexidefinition}{$\{26\}$}[Limit point]
+    Let $(X,\TT)$ be a topological space, and $A \subset X$. We say that $q \in X$ is a limit point of $A$ if every neighborhood of $q$ contains a point in $A$ that is not $q$.
+\end{flexidefinition}
+
+\begin{flexilemma}{E2.11 - $\{26\}$}[Sequential characterization of closed sets]
+    Let $(X,\TT)$ be a topological space, and $A \subset X$. $A$ is closed if and only if it contains all its limit points.
+\end{flexilemma}
+
+\begin{flexidefinition}{$\{27\}$}[Dense set]
+    Let $(X,\TT)$ be a topological space, and $A \subset X$. We say that $A$ is dense in $X$ if $\bar A = X$.
+\end{flexidefinition}
+
+
+
+\section{Convergence and continuity}
+
+\begin{flexidefinition}{$\{ 20 \}$}[Convergence]
+    Let $(X,\TT)$ be a topological space, and $(x_i)$ be a sequence in $X$. We say that $(x_i)$ converges towards $x$, if for every neighborhood $A$ of $x$, there exists $N > 0$ such that for all $i \geq N$, $x_i \in A$.
+\end{flexidefinition}
+
+\begin{flexidefinition}{$\{ 20 \}$}[Continuity]
+    Let $(X,\TT_X)$, $(Y,\TT_Y)$ be two topological spaces, and $f : X \to Y$. We say that $f$ is continuous if for all $U \in \TT_Y$, $f^{-1}(U) \in \TT_X$. 
+\end{flexidefinition}
+
+\begin{flexilemma} {L2.1 - $\{21\}$}[Examples of continuous maps]
+    Constant map, identity map, restriction of a continuous function to an open subset, composition of continuous functions are continuous.
+\end{flexilemma}
+
+\begin{flexidefinition}{$\{22\}$}[Homeomorphism]
+    Let $(X,\TT_X)$, $(Y,\TT_Y)$ be two topological spaces, and $\varphi : X \to Y$. $\varphi$ is said to be a homeomorphism if it is a continuous bijection with a continuous inverse. If such a map exists, then $X$ and $Y$ are said to be homeomorphic, and we write $X \simeq Y$
+\end{flexidefinition}
+
+\begin{flexilemma}{E2.5 - $\{22\}$}[Homeomorphic sets]
+    $\simeq$ is an equivalence relation.
+\end{flexilemma}
+
+\begin{flexidefinition}{$\{24\}$}[Open map]
+    Let $(X,\TT_X)$, $(Y,\TT_Y)$ be two topological spaces, and $f : X \to Y$. $f$ is said to be an open map if $f(U) \in \TT$, for all $U \in \TT$.
+\end{flexidefinition}
+
+\begin{flexidefinition}{$\{27\}$}[Closed map]
+    Let $(X,\TT_X)$, $(Y,\TT_Y)$ be two topological spaces, and $f : X \to Y$. $f$ is said to be a closed map if $f(C)$ is closed, for all closed $C$.
+\end{flexidefinition}
+
+\section{Bases}
+\begin{flexidefinition}{$\{27\}$}[Base]
+Let $X$ be a set. A basis in $X$ is a collection $\BB$ of subsets of $X$, satisfying:
+\begin{enumerate}[label = (\alph*)]
+    \item $\bigcup_{B \in \BB} B = X$,
+    \item If $B_1,B_2 \in \BB$, and $x \in B_1 \cap B_2$, there exists $x \in B_3 \subseteq B_1 \cap B_2$.
+\end{enumerate}
+\end{flexidefinition}
+
+\begin{flexilemma}{P2.9 - $\{27\}$}[Topology generated by a basis]
+    Let $X$ be a set, $\BB$ be a basis in $X$, and define $\TT$ to be the collection of all unions of elements of $\BB$. Then, $\TT$ is a topology on $X$. $\TT$ is called the topology generated by $\BB$.
+\end{flexilemma}
+
+\begin{flexidefinition}{$\{27\}$}[Basis criterion]
+    Let $X$ be a set, and $\BB$ be a collection of subsets of $X$. We say that $U \subseteq X$ satisfies the basis criterion with respect to $B$ if for all $x \in U$, $\exists B \in \BB$ s.t. $x \in B \subseteq U$.
+\end{flexidefinition}
+\begin{flexilemma}{L2.10 - $\{27\}$}[Identification of the topology generated by a basis through the basis criterion]
+    Let $X$ be a set, $\BB$ be a basis in $X$, and define $\TT$ be the topology generated by $\BB$. Then, $U \in \TT$ iff $U$ satisfies the basis criterion with respect to $\BB$.
+\end{flexilemma}
+
+\begin{flexilemma}{L2.11 - $\{29\}$}[Characterization of an open basis for a generating a topology]
+    Let $(X,\TT)$ be a topological space, and $\BB \subseteq \TT$. If for all $U \in \TT$, $U$ satisfies the basis criterion with respect to $\BB$, then $\BB$ generates $\TT$.
+\end{flexilemma}
+
+\begin{flexilemma}{E2.15 - $\{29\}$}[Examples of basis]
+    \begin{enumerate}
+        \item Let $(M,\rho)$ be a metric space. The set of open balls is a basis for the topology induced by $\rho$,
+        \item Let $(X,\TT)$ be a discrete topological space. $\{ \{x\} : x \in X\}$ is a basis generating $\TT$.
+    \end{enumerate}
+\end{flexilemma}
+
+\begin{flexilemma}{L2.12 - $\{30\}$}[Basis characterization of continuity]
+    Let $(X,\TT_X)$ and $(Y,\TT_Y)$ be two topological spaces, and $\BB$ be a basis generating $\TT_Y$. A map $f : X \to Y$ is continuous iff for all $U \in \BB \cap \TT$, $f^{-1}(U) \in \TT_X$.
+\end{flexilemma}
+
+\begin{flexilemma}{Pb2.8 - $\{30\}$}[Basis generation through a homeomorphism]
+    Let $X,Y$ be two topological spaces, $\BB$ be a basis in $X$, and $f$ be a surjective open map. Then, $f(\BB)$ is a basis in $Y$.
+\end{flexilemma}
+
+\section{Manifolds}
+
+\begin{flexidefinition}{$\{30\}$}[Locally Euclidean space of dimension $n$]
+    A topological space $(X,\TT)$ is locally Euclidean of dimension $n$ if every point $q \in M$ has a neighborhood that is homeomorphic to an open subset of $\R^n$.
+\end{flexidefinition}
+
+\begin{flexilemma} {L2.13 - $\{30\}$}[Characterization of locally Euclidean space through open balls]
+    A topological space $(X,\TT)$ is locally Euclidean of dimension $n$ iff either 
+    \begin{enumerate}
+        \item every point has a neighborhood homeomorphic to an open ball in $\R^n$,
+        \item every point has a neighborhood homeomorphic to $\R^n$.
+    \end{enumerate}
+\end{flexilemma}
+
+\begin{flexidefinition} {$\{31\}$} [Hausdorff spaces]
+    A topological space $(X,\TT)$ is said to be a Hausdorff space if for all $x,y \in X$, there exists respective neighborhoods $U,V$ of $x,y$ such that $U\cap V = \varnothing$.
+\end{flexidefinition}
+
+\begin{flexilemma} {L2.14 - $\{31-32\}$} [Properties of Hausdorff spaces] Let $(X,\TT)$ be a Hausdorff space.
+    \begin{enumerate}
+        \item Every one-point set is closed,
+        \item If a sequence $\{x_i\}$ converges, the limit is unique.
+    \end{enumerate}
+\end{flexilemma}
+
+\begin{flexidefinition}{$\{32\}$} [Countability]
+    A topological space $(X,\TT)$ is said to be second countable if it admits a countable basis, and first countable if each points admits a neighborhood having a countable basis.
+\end{flexidefinition}
+
+\begin{flexidefinition} {$\{32\}$}[Cover]
+    A collection $\BB$ of subsets of $X$ is a cover if $\cup_{B \in \BB} B = X$, and an open cover if $B$ is open for all $B \in \BB$ (if there is a topology on $X$).
+\end{flexidefinition}
+
+\begin{flexilemma} {L2.15 - $\{32\}$}[Countable subcovers]
+    Let $(X,\TT)$ be a second countable topological space. Then, every open cover has a countable subcover.
+\end{flexilemma}
+
+\begin{flexidefinition}{$\{33\}$}[Manifold]
+    An $n$-dimentional topological manifold (or $n$-manifold) is a second countable Hausdorff space that is locally Euclidean of dimension $n$.
+\end{flexidefinition}
+
+\begin{flexilemma}{L2.16 - $\{34\}$}[Stability through open sets]
+    Any open subset of an $n$-manifold is an $n$-manifold.
+\end{flexilemma}
+
+\begin{flexidefinition}{$\{34\}$}[Manifold with boundary]
+    An $n$-dimentional topological manifold (or $n$-manifold) is a second countable Hausdorff space that is locally homeomorphic to the half-open set $[0,\infty)^n$.
+\end{flexidefinition}
+
+\section{Combination of topological spaces}
+
+\subsection{Subspace topology}
+
+\begin{flexilemma}{$\{39\}$}[Subspace topology]
+    Let $(X,\TT)$ be a topological space, and $A \subset X$. Let the subspace topology on $A$ be defined as
+    \begin{equation}
+        \TT_A := \{ U \subset A : U = A \cap V \text{ for some open set } V \subset X\}.
+    \end{equation}
+\end{flexilemma}
+
+\begin{flexidefinition}{$\{40\}$}[Topological embedding]
+    An injective continuous map that is a homeomorphism onto its image is called a topological embedding.
+\end{flexidefinition}
+
+\begin{flexitheorem}{T3.3 - $\{41\}$}[Characteristic property of Subspace Topologies]
+    Suppose $A \subset X$ is a subspace. For any topological space $Y$, a map $f : Y \to A$ is continuous iff the following composite map from $Y$ to $X$ is continuous
+    \begin{equation}
+        Y \overset{f}{\to} A \overset{\iota_A}{\to} X.
+    \end{equation}
+\end{flexitheorem}
+
+\begin{flexitheorem}{T3.9 - $\{47\}$}[Uniqueness of Subspace Topologies]
+    Suppose $A \subset X$ is a subset of $X$. Then, $\TT_A$ is the unique topology on $A$ satisfying the characteristic property.
+\end{flexitheorem}
+
+\begin{flexilemma}{P3.4 - $\{41\}$}[Properties of Subspace topology]
+    Let $A$ be a subspace of some topological space $X$.
+    \begin{enumerate}[label = (\alph*)]
+        \item The inclusion map in continuous, and more precisely is a topological embedding.
+        \item If $f : X \to Y$ is continuous, then so is $f_{|A}$.
+        \item If $f: X \to Y$ is continuous, then so is $f: X \to f(X)$.
+        \item Closed subsets of $A$ are intersections of $A$ with closed subsets of $X$.
+        \item If $B \subset A$ is a subspace of $A$, then $B$ is a subspace of $X$.
+        \item If $B \subset A \subset X$ is open in $A$, and $A$ is open in $X$, then $B$ is open in $X$.
+        \item $\BB$ is a basis then $\BB_A = \{ B \cap A : B \in \BB\}$ is a basis in $X$.
+        \item Any subspace of a Hausdorff space is Hausdorff.
+        \item Any subspace of a scond countable space is second countable.
+    \end{enumerate}
+\end{flexilemma}
+
+\begin{flexilemma}{L3.8 - $\{46\}$}[Gluing lemma]
+    Let $X$ be a topological space, and suppose that $X = A_1 \cup \ldots A_k$, where each $A_i$ is closed in $X$. For each $i$, let $f_i : A_i \to Y$ be a continuous map such that $f_i|_{A_i \cap A_j} = f_j|_{A_i \cap A_j}$. There exists a unique continuous map $f:X \to Y$ such that $f|_{A_i} = f_i$, for all $i$.
+\end{flexilemma}
+
+\subsection{Product spaces}
+
+\begin{flexidefinition}{$\{48\}$}[Basis of Cartesian product]
+    Let $X_1, \ldots, X_n$ be topological spaces. We let 
+    \begin{equation}
+        \BB = \{ U_1 \times \ldots \times U_n : U_i \in \TT_{X_i} \}.
+    \end{equation}
+
+    $\BB$ is a basis in $X_1\times \ldots \times X_n$, and the topology it generates is called the product topology $\TT$. $(X_1\times \ldots \times X_n,\TT)$ is called the product space.
+\end{flexidefinition}
+
+\begin{flexitheorem}{T3.10/11 - $\{49\}$}[Characteristic property of Product topologies]
+    Let $X_1\times \ldots \times X_n$ be a product space. A map $f : B \to X_1\times \ldots \times X_n$ is comtinuous iff each component $f_i := \pi_i \circ f$ is continuous. The product topology is the only to satisfy it.
+\end{flexitheorem}
+
+\begin{flexidefinition}{Munkers}[Infinite product topology (cylinder set topology)]
+    Let $X_1, \ldots, X_n, \ldots$ be topological spaces, and let $X := \prod_{i=1}^\infty X_i$. We let 
+    \begin{equation}
+        \BB := \{U \subset X: \exists n \in \NN, U_n \in \TT_{X_n}, \pi_n^{-1}(U_n) = U\}.
+    \end{equation}
+    Then, $\BB$ generates a topology on $X$, this topology is the only one that makes the projection maps continuous.
+\end{flexidefinition}
+For many properties of product topologies, see page $\{50\}$.
+
+\subsection{Quotient spaces}
+
+\begin{flexidefinition}{$\{52\}$}[Quotient space topology]
+    Let $X$ be a topological space, $Y$ a set, and $\pi : X \to Y$ be a surjective map. We define a topology on $Y$ by declaring $U \subset Y$ to be open iff $\pi^{-1}(U)$ is open in $X$. This is called the quotient topology on $Y$. Conversely, we say that $\pi : X \to Y$ is a quotient map if it is surjective, continuous, and $Y$ has the quotient topology induced by $\pi$.
+\end{flexidefinition}
+
+$\{52\}$ We say that $U \subset X$ is saturated if there exist $V \subset Y$ such that $U = \pi^{-1}(V)$ (i.e. $U$ is a union of equivalence classes). $\pi^{-1}(\{y\})$ is called a fiber. A saturated set is a union of fibers.
+
+\begin{flexilemma}{L3.16 - $\{53\}$}[Characterization quotient maps]
+    A continuous surjective map $\pi : X \to Y$ is a quotient map iff it takes saturated open sets to open sets, and same with saturated closed sets.
+\end{flexilemma}
+
+\begin{flexilemma}{L3.17 - $\{53\}$}[Restriction of quotient maps]
+    The restriction of a quotient map to a saturated open or closed set is a quotient map.
+\end{flexilemma}
+
+$\{53\}$ A surjective continuous open or closed map is a quotient map. Composition of quotient maps are quotient maps.
+
+\begin{flexitheorem}{T3.29/31 - $\{57\}$}[Characteristic property of Quotient topologies]
+    Let $\pi : X \to Y$ be a quotient map. For any space $B$, $f : Y \to B$ is continuous iff $f \circ \pi$ is continuous. $\pi$ is a quotient map iff the characteristic property holds.
+\end{flexitheorem}
+
+By Corollary 3.32, quotient spaces are homeomorphic to each other.
+
+\subsection{Group actions}
+
+\begin{flexidefinition}{$\{58\}$}[Topological group]
+    A topological group is a group $G$ endowed with a topology such that the product and inverse maps are continuous. A discrete group is a topological group with the discrete topology.
+\end{flexidefinition}
+
+Note that any group with the discrete topology is a topological group.
+
+\begin{flexilemma}{L3.34 - $\{59\}$}[Topological subgroup]
+    Any subgroup are product of topological groups is a topological group.
+\end{flexilemma}
+
+\begin{flexidefinition}{$\{59\}$}[Translation]
+    For $g \in G$, the left translation map $L_g : G \to G$ defined as $L_g(g') = gg'$ is a homeomorphism. For $g \in G$, the right translation map $R_g : G \to G$ defined as $R_g(g') = g'g$ is a homeomorphism. 
+\end{flexidefinition}
+
+\begin{flexidefinition}{$\{59\}$}[Group actions]
+    Let $G$ be a group and $X$ a topological space. A left action of $G$ on $X$ is a map $G \times X \to X$, written $(g,x) \mapsto g \cdot x$, with the following properties
+    \begin{enumerate}[label = (\roman*)]
+        \item For any $x \in X$, and any $g_1,g_2 \in G$, $g_1 \cdot (g_2 \cdot x) = (g_1g_2) \cdot x$,
+        \item For all $x \in X$, $1 \cdot x = x$.
+    \end{enumerate}
+    We say that the action of $G$ on $X$ is continuous if $G \times X \to X$ is continuous. For $x \in X$, we say that $G \cdot x := \{g \cdot x : g \in G\}$ is the orbit of $x$. We say that an action is transitive is the orbit is the entire space. It is said to be free if the only element satifying $g \cdot x = x$ is $g = 1$. We define as an equivalence relation all the points that are on a same orbit. We denote the quotient sapce by $X/G$, also called the orbit space of the action.
+\end{flexidefinition}
+
+\section{Connectedness}
+
+\subsection{Generalities on connectedness}
+
+\begin{flexidefinition}{$\{65\}$}[Separation and connectedness]
+    Let $(X,\TT)$ be a topological space. A separation of $X$ is a pair of disjoint open sets $U,V \in \TT$, such that $U \cup V = X$. If a separation exists, we say that $X$ is disconnected, and connected otherwise.
+\end{flexidefinition}
+\begin{flexilemma}{P4.2 - $\{66\}$}[Characterization of connectedness]
+    Let $(X,\TT)$ be a topological space. $X$ is connected if and only if the sets that are both open and closed are $X$ and $\varnothing$.
+\end{flexilemma}
+\begin{flexitheorem}{T4.3 - $\{67\}$}[Connectedness theorem]
+    Let $(X,\TT_X)$, $(Y,\TT_Y)$ be topological spaces, and $f: X \to Y$ be a continuous function. If $X$ is connected, then $f(X)$ is connected as well.
+\end{flexitheorem}
+\begin{flexilemma}{P4.4 - $\{67\}$}[Properties on connected sets]
+    \begin{enumerate}[label=(\alph*)]
+        \item If $A$ is a connected subsut of $U\cup V$, then $A\subset U$ or $A \subset V$.
+        \item $A$ is connected $\Rightarrow$ $\bar A$ is connected.
+        \item Let $A_\alpha$ be a collection of connected set with one common point. Then, $\cup_{\alpha} A_\alpha$ is connected.
+        \item Any finite product of connected spaces is connected.
+        \item Any quotient space of a connected set is connected.
+    \end{enumerate}
+\end{flexilemma}
+
+\begin{flexitheorem}{P4.5 - $\{68\}$}[Connected sets are intervals]
+    A nonempty subset of $\R$ is connected iff it is an interval.
+\end{flexitheorem}
+
+\begin{flexitheorem} {T4.6 - $\{68\}$} [Intermediate value theorem]
+    Let $X$ be a connected topological space and $f$ a continued real-valued function. For $p,q \in X$, $f$ takes all values between $f(p)$ and $f(q)$.
+\end{flexitheorem}
+
+\subsection{Path-connectedness}
+
+\begin{flexidefinition}{$\{69\}$}[Path connectedness]
+    A path in a topological space $(X,\TT)$ from $p$ to $q$ is a continuous function $f: [0,1] \to X$ such that $f(0) = p$ and $f(1) = q$. We say that $(X,\TT)$ is path connected if for each $p,q \in X$, there exists a path in $(X,\TT)$ from $p$ to $q$.
+\end{flexidefinition}
+
+\begin{flexitheorem}{T4.7 - $\{69\}$ }[Path connectedness implies connectedness]
+    Path connectedness implies connectedness.
+\end{flexitheorem}
+
+\subsection{Components, path components}
+\begin{flexidefinition}{$\{70\}$}[Connectivity relation]
+    Let $(X,\TT)$ be a topological space. We define the connectivity relation $p \sim q$ as there exists a connected subset of $X$ containing both $p$ and $q$.
+\end{flexidefinition}
+
+\begin{flexilemma}{P4.11 - $\{70\}$}[Connectivity relation is equivalent]
+    The connectivity relation is an equivalence relation.
+\end{flexilemma}
+
+\begin{flexidefinition}{$\{70\}$}[Components]
+    The elements of $X / \sim$ are called the components of $X$.
+\end{flexidefinition}
+
+\begin{flexilemma}{L4.12 - $\{71\}$}[Maximal connected sets are components]
+    The components of $X$ are exactly the maximal connected subsets of $X$, that is, connected sets that are not contained in any larger connected set.
+\end{flexilemma}
+
+\begin{flexilemma}{P4.14 - $\{71\}$}[Properties of components]
+    Let $X$ be a topological space. 
+    \begin{enumerate}[label = (\alph*)]
+        \item the components of $X$ are closed in $X$,
+        \item every connected subset of $X$ is contained in a single component.
+    \end{enumerate}
+\end{flexilemma}
+
+\begin{flexidefinition}{$\{71/72\}$}[Path components]
+    Let $(X,\TT)$ be a topological space. We define the path connectivity relation $p \simp q$ as there exists a path from $p$ to $q$. The elements of $X / \simp$ are called the path components of $X$.
+\end{flexidefinition}
+
+\begin{flexilemma}{P4.15 - $\{72\}$}[Properties of path components]
+    Let $X$ be a topological space. 
+    \begin{enumerate}[label = (\alph*)]
+        \item Each path component is contained in a single component, and each component is a disjoint union of path components,
+        \item If $A \subseteq X$ is path connected, then $A$ is contained in a single path component.
+    \end{enumerate}
+\end{flexilemma}
+
+\begin{flexidefinition}{$\{72\}$}[Local connectedness]
+    A topological space $X$ is locally connected if it admits a basis of connected open sets, and locally path connected if it admits a basis of path connected open sets.
+\end{flexidefinition}
+
+\begin{flexilemma}{L4.16 - $\{72\}$}[Properties of locally conected sets]
+    \begin{enumerate}[label = (\alph*)]
+        \item If $X$ is locally connected, then each component of $X$ is open,
+        \item If $X$ is locally path connected , then each component is open, the path components and components are the same, and $X$ is connected iff it is path connected.
+    \end{enumerate}
+\end{flexilemma}
+
+\begin{flexitheorem}{P4.17 - $\{73\}$}[Path connectedness of manifolds]
+    Every manifold is locally path connected.
+\end{flexitheorem}
+
+
+\section{Compactness}
+
+\begin{flexidefinition}{$\{73\}$}[Subcover]
+    Let $\UU$ be a cover of $X$. Then, a subcover is a subset of $\UU$ that still covers $X$.
+\end{flexidefinition}
+
+
+\begin{flexidefinition}{$\{73\}$}[Compactness]
+    Let $X$ be a topological space. $X$ is said to be compact if every open cover of $X$ admits a finite subcover. A subset $A \subset X$ is said to be compact if it is compact with respect to the subset topology.
+\end{flexidefinition}
+
+\begin{flexitheorem}{T4.18 - $\{73\}$}[Compactness theorem]
+    Let $X,Y$ be two topological spaces, and suppose that $X$ is compact. Let $f : X \to Y$ be a continuous function. Then, $f(X)$ is compact.
+\end{flexitheorem}
+
+\begin{flexilemma}{P4.19 - $\{74\}$}[Properties of compactness]
+    \begin{enumerate}[label = (\alph*)]
+        \item Every closed subset of a compact space is compact.
+        \item In a Hausdorff space $X$, compact sets can be separatd by open sets.
+        \item Every compact set of a Hausdorff space is closed.
+        \item Every product of compact spaces is compact.
+        \item Every quotient of a compact space is compact.
+    \end{enumerate}
+\end{flexilemma}
+\begin{flexitheorem}{T4.20 - $\{76\}$}[Extreme value theorem]
+    If $X$ is a compact space and $f:X \to \R$ is continuous, then $f$ attains its minimal and maximal values.
+\end{flexitheorem}
+
+\subsection{Limit point and sequential compactness}
+
+\begin{flexidefinition}{$\{76\}$}[Limit point compactness]
+    A space $X$ is said to be limit point compact if for every infinite subset $A \subseteq X$, $A$ has a limit point in $X$.
+    
+\end{flexidefinition}
+\begin{flexidefinition}{$\{77\}$}[Sequential compactness]
+    A space $X$ is said to be sequntially compact if for every sequence in $X$ has a subsequence converging in $X$.
+\end{flexidefinition}
+
+\begin{flexilemma}{P4.22 - $\{77\}$}[Compact $\subset$ Limit point compact]
+    Compactness implies limit point compactness.
+\end{flexilemma}
+
+\begin{flexilemma}{L4.23 - $\{77\}$}[Limit point + 1st count + Hausdorff $\Rightarrow$ Sequential]
+    For first countable Hausdorff spaces, limit point compactness implies sequential compactness.
+\end{flexilemma}
+
+\begin{flexilemma}{P4.25 - $\{79\}$}[Closed map lemma]
+   Let $F$ ba a continuous map from a compact space to a Hausdorff space.
+   \begin{enumerate}[label = (\alph*)]
+    \item $F$ is a closed
+    \item If $F$ is surjective, it is a quotient map.
+    \item If $F$ is injective, it is a topological embedding.
+    \item If $F$ is bijective, it is a homemorphism.
+   \end{enumerate}
+\end{flexilemma}
+
+\subsection{Closed map lemma}
+
+\begin{flexilemma}{L4.25 - $\{78\}$}[2nd count + Hausdorff $\Rightarrow$ compactnesses are eq]
+    For metric spaces and second countable Hausdorff spaces, compactness, limit point compactness, and sequential compactness are all equivalent.
+\end{flexilemma}
+
+\subsection{Locally compact spaces}
+
+\begin{flexidefinition}{$\{81\}$}[Locally compact space]
+    $X$ is locally compact if there every $q \in X$ has a compact set containing one of its neighborhoods.
+\end{flexidefinition}
+
+\begin{flexidefinition}{$\{82\}$}[Relatively compact space]
+    $A$ is relatively compact in $X$ if $\bar A$ is compact.
+\end{flexidefinition}
+
+\begin{flexilemma}{$\{82\}$}[Locally compact Hausdorff spaces]
+    Let $X$ be a Hausdorff space. The followiong are iff:
+    \begin{enumerate}[label = (\alph*)]
+        \item $X$ is locally compact.
+        \item each point of $X$ has a relatively compact neighborhood.
+        \item $X$ has a basis of relatively compact open sets.
+    \end{enumerate}
+\end{flexilemma}
+
+\begin{flexilemma}{$\{82\}$}[Shrinking lemma]
+    Let $X$ be a locally compact Hausdorff space. If $x \in X$ and $U$ is neighborhood of $x$, there is a relatively compact neighborhood of $c$ such that $\bar V \subseteq U$.
+\end{flexilemma}
+
+\begin{flexidefinition}{$\{84\}$}[Proper map]
+    $f:X \to Y$ is a proper map if the inverse image of compact subsets are also compact subsets.
+\end{flexidefinition}
+
+\begin{flexilemma}{$\{84\}$}[Proper $\Rightarrow$ Closed]
+    Let $X,Y$ be a locally compact Hausdorff spaces and $f : X \to Y$ be continuous and proper. Then, $f$ is closed.
+\end{flexilemma}
+
+\begin{flexitheorem}{$\{85\}$}[Baire category theorem]
+    Let $X$ be a locally compact Hausdorff space or a complete metric space. Every countable collection of dense open subsets has a dense intersection.
+\end{flexitheorem}
+
+\begin{flexidefinition}{$\{85\}$}[Nowhere dense set]
+    A set $A \subset X$ is said to be nowhere dense if its closure contains no nonempty open set.
+\end{flexidefinition}
+
+\begin{flexilemma}{$\{85\}$}[Corollary of Baire category theorem]
+    Let $X$ be a locally compact Hausdorff space or a complete metric space. Any countable union of nowhere dense set has empty interior.
+\end{flexilemma}
+
+\begin{flexidefinition}{$\{86\}$}[Baire categories]
+    A first Baire category set (or meager set) is a countable union of nowhere dense sets, and a second Baire categroy set is a set that is not of first Baire category.
+\end{flexidefinition}
+
+
+
+
+
+
+
+\bibliography{biblio}{}
+\bibliographystyle{alpha}
+
+\end{document}
