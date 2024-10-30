@@ -1,0 +1,88 @@
+
+% measures
+\newcommand{\udsm}{{\bf m}}
+\newcommand{\Udsm}{{\bf M}}
+\newcommand{\norm}{{\operatorname{norm}}}
+
+% sets and calligraphic letters
+\newcommand{\BB}{\mathcal{B}}
+\newcommand{\NN}{\mathcal{N}}
+\newcommand{\QQ}{\mathcal{Q}}
+\newcommand{\ZZ}{\mathcal{Z}}
+\newcommand{\RR}{\mathcal{R}}
+\newcommand{\FF}{\mathcal{F}}
+\newcommand{\XX}{\mathcal{X}}
+\newcommand{\SM}{\mathcal{S}}
+\newcommand{\MM}{\mathcal{M}}
+\newcommand{\CC}{\mathcal{C}}
+
+\newcommand{\GGG}{\mathscr{G}}
+
+\newcommand\pp[1]{$\{ #1 \}$}
+
+
+% math operators 
+\newcommand{\limi}[1]{\underset{#1 \to \infty}{\lim}}
+\newcommand{\limo}[1]{\underset{#1 \to 0}{\lim}}
+\newcommand{\dom}[1]{\operatorname{dom}(#1)}
+\newcommand{\range}[1]{\operatorname{range}(#1)}
+
+
+% definitions and theorems
+
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+
+
+\newtheorem{manualtheoreminner}{Theorem}
+\newenvironment{manualtheorem}[1]{%
+  \renewcommand\themanualtheoreminner{#1}%
+  \manualtheoreminner
+}{\endmanualtheoreminner}
+
+\newtheorem{manualdefinitioninner}{Definition}
+\newenvironment{manualdefinition}[1]{%
+  \renewcommand\themanualdefinitioninner{#1}%
+  \manualdefinitioninner
+}{\endmanualdefinitioninner}
+
+\newtheorem{manuallemmainner}{Lemma}
+\newenvironment{manuallemma}[1]{%
+  \renewcommand\themanuallemmainner{#1}%
+  \manuallemmainner
+}{\endmanuallemmainner}
+
+\newtheoremstyle{named}{}{}{\itshape}{}{\bfseries}{.}{.5em}{\thmnote{#3}#1}
+\theoremstyle{named}
+\newtheorem{namedtheorem}{x}
+
+
+\newtheoremstyle{flexith}{}{}{\mdseries}{}{\itshape}{}{.5em}{\textit{\textbf{Theorem}}  \thmnumber{#2}: (#3).}
+\theoremstyle{flexith}
+
+\newtheorem{flexitheoreminner}{Theorem}
+\newenvironment{flexitheorem}[1]{
+  \renewcommand\theflexitheoreminner{#1}%
+  \flexitheoreminner
+}{\endflexitheoreminner}
+
+\newtheoremstyle{flexide}{}{}{\mdseries}{}{\itshape}{}{.5em}{\textit{\textbf{Definition}}  \thmnumber{#2}: (#3).}
+\theoremstyle{flexide}
+
+\newtheorem{flexidefinitioninner}{Definition}
+\newenvironment{flexidefinition}[1]{
+  \renewcommand\theflexidefinitioninner{#1}%
+  \flexidefinitioninner
+}{\endflexidefinitioninner}
+
+\newtheoremstyle{flexile}{}{}{\mdseries}{}{\itshape}{}{.5em}{\textit{\textbf{Lemma}}  \thmnumber{#2}: (#3).}
+\theoremstyle{flexile}
+
+\newtheorem{flexilemmainner}{Lemma}
+\newenvironment{flexilemma}[1]{
+  \renewcommand\theflexilemmainner{#1}%
+  \flexilemmainner
+}{\endflexilemmainner}
+

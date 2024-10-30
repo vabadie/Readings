@@ -1,0 +1,1381 @@
+\documentclass{article}
+
+\usepackage{math_packages}
+\usepackage{user_commands}
+
+
+
+\begin{document}
+\begin{center}
+    \textbf{Kolmogorov complexity toolkit}
+\end{center}
+
+All the definitions that follow are directly taken from the book \cite{li2008kolmogorov}. We specify on which page the definition is given with brackets, for example we write $\{12\}$ for page 12. If there is a special numbering (i.e. if the statement is in a Theorem), we might write $\{12, T2.3\}$ to refer to Theorem 2.3 of the book. Same goes for Lemmas (L), Definitions (D), Properties (P), Exercises (Ec) and Examples (Ep).
+
+\section{Basic and very useful facts}
+
+\subsection{Equivalence between integers and binary sequences}
+
+ $\{7\}$ $\NN$ denotes the integers (including 0). 
+ 
+ \begin{flexidefinition}{S1.4 - $\{12,13\}$}[Enumeration of binary sequences]
+    We enumerate the binary sequences as follows
+\begin{equation}
+    (0,\epsilon), (1,0), (1,2), (00,3), (01,4) , (10,5), (11,6), \ldots
+\end{equation}
+% This is commonly referred to as the \textit{shortlex ordering} (first order by size, then order by lexicographical ordering). 
+We will make the confusion between a binary string and its position in the lexicographical ordering, i.e. we make the confusion between $\NN$ and $\{0,1\}^\ast$. For $x,y \in \NN$, we denote by $xy$ the concatenation of $x$ and $y$, and $x^R$ denotes the flipped version of $x \in \NN$. We write $l(x)$ to denote the length of $x \in \NN$.
+ \end{flexidefinition}
+ 
+
+\subsection{Pairing functions}
+
+\begin{flexidefinition}{S1.2 - $\{7\}$}[Definition Pairing function]
+    A pairing function $\langle \cdot \rangle: \NN^2 \to \NN$ is a total one-to-one function. A pairing function can always be extended to arbitrary $\NN^n$ according to the following recursive definition.
+    \begin{equation}
+        \langle x_1, \ldots, x_n \rangle := \langle x_1, \langle x_2, \ldots, x_{n} \rangle \rangle.
+    \end{equation}
+\end{flexidefinition}
+
+\begin{flexidefinition}{S1.2 - $\{7\}$}[Definition Cantor pairing function]
+    A common example of a pairing function is the Cantor pairing function defined as
+\begin{equation}
+    \langle x,y \rangle_C := y + (x+y+1)(x+y)/2.
+\end{equation}
+\end{flexidefinition}
+
+
+\begin{flexilemma}{E1.7.13 - $\{43\}$}[Cantor pairing function is bijective]
+    The Cantor pairing function has the advantage to be bijective, but it is not a prefix-code. Moreover, for Kolmogorov complexity, it is not very intuitive, and we rather use the following standard pairing function.
+\end{flexilemma}
+
+\begin{flexidefinition}{E1.4.5 - $\{15\}$}[Standard pairing function]
+ We define the standard pairing function as
+    \begin{align}
+        & \langle y,x \rangle = \bar y x, \  \forall x,y \in \NN,\\  
+        & \langle x_1, x_2, \ldots, x_n \rangle = \bar x_1 \bar x_1 \ldots \bar x_{n-1} x_n, \ \  \forall x_1,\ldots,x_n \in \NN.
+    \end{align}
+    
+\end{flexidefinition}
+
+\begin{flexidefinition}{S1.7.3 - $\{35-36\}$}[Standard pairing function]
+    The following notations are not explicitly mentionned in the book, but appear implicitly. Let $x \in \NN$, and $y \in \QQ$, and denote by $p/q = y$ the irreducible form of $y$. $x = y$ means $x = \langle p,q \rangle$. $(x,y)$ denotes $\langle x, \langle p,q \rangle \rangle$, and $(y,x)$ denotes $\langle \langle p,q \rangle, x \rangle$.
+\end{flexidefinition}
+
+
+
+\subsection{Asymptotic notation}
+
+$\{16\}$ We write $f(x) = O(1)$ if $\exists c > 0$ such that $f(x) \leq c$ for all $x \in \NN$, and we define $f(x) \leq O(1)$ analogously. 
+
+\section{Prerequisites in probability and information theory}
+\subsection{Probability theory}
+$\{19\}$ A measure is a function defined on a field to $\RR_+$.
+
+\begin{flexidefinition}{E1.6.6 - $\{23\}$}[Measure on integers]
+    We introduce a uniform measure on $\NN$, as
+\begin{equation}
+    L(x) = 2^{-2l(x)-1}.
+\end{equation}
+One has
+\begin{equation}
+    L_n(x) := L(x|l(x) = n) = \frac{1}{2^n} 1_{l(x)=n}.
+\end{equation}
+\end{flexidefinition}
+
+% \subsection{Probability on $\{0,1\}^\infty$}
+\begin{flexidefinition}{E1.6.5 - $\{21\}$}[Cantor space]
+    Let $\Gamma_x := \left\{x \omega: \omega \in \{0,1\}^\infty \right\}$. The sets $\Gamma_x, \ x \in \NN$ are called the \textit{cylinder sets}. Note that $\Gamma_x = \Gamma_{x0} \bigsqcup \Gamma_{x1}$, where $\bigsqcup$ denotes disjoint union. The closure $\FF$ of cylinder sets under union, intersection and difference is an algebra (or field). 
+\end{flexidefinition}
+
+\begin{flexidefinition}{E1.6.5 - $\{21\}$}[Uniform distribution on the Cantor space]
+    We define the Lebesgue measure on $\FF$ as $\lambda(\Gamma_x) = 2^{-l(x)}$, and by respecting $\{18\}$ the Kolmogorov axioms of probability field for the rest. By $\{21\}$ the Kolmogorov extension theorem, we can define a smallest $\sigma$-algebra $\sigma$ containing the cylinder sets, associated with a probability measure on $\sigma$, which agrees with the Lebesgue measure on $\FF$.
+\end{flexidefinition}
+
+\begin{flexidefinition}{E1.7.8 - $\{36\}$}[Computable measure]
+    A measure is said to be computable (upper, lower semicomputable) if the function $f : \NN \to \RR$ defined by $f(x) = \mu(\Gamma_x)$ for all $x \in \NN$ is computable (upper, lower semicomputable).
+\end{flexidefinition}
+
+\subsection{Entropy, Information Theory}
+
+$\{67\}$ The entropy of random variable $X$ defined on $\Omega \to \mathcal X$ is
+\begin{equation}
+    H(X) = \sum_{x \in \mathcal X} P(X = x) \log \frac{1}{P(X=x)}
+\end{equation}
+
+$\{68\}$ Length of Shannon-Fano code tends to entropy.
+
+$\{69\}$ We define the information given by $X = x$ to $Y$ as $I(X=x: Y) = H(Y) - H(Y|X=x)$.
+
+$\{70\}$ We define the mutual information as $I(X:Y) = \mathbb E(I(X=x:Y)) = \mathbb E(I(Y=y:X))$.
+
+$\{72\}$ We define the Kullback-Leiber divergence as 
+\begin{equation}
+    D(q_1 || q_2) := \sum_{x\in \mathcal X} q_1(x) \log \frac{q_1(x)}{q_2(x)}\cdot
+\end{equation}
+\subsection{Statistics}
+$\{83\}$ A satistic is a function $S$ from a countable set $\XX$ (data points) to a set $\SM$ (satistic). Let $\{P_\theta: \theta \in \Theta\}$ be a class of distributions, indexed in a class $\Theta$ of parameters. A statistic is sufficient if $p_\theta(x|S(x) = s)$, does not depend on $\theta$. $\{84\}$ A statistic is sufficient $I(\Theta,X) = I(\Theta,S(X))$ for all any prior distribution on $\Theta$.
+
+\section{Codes}
+
+\subsection{Prefix-codes, uniquely decodable codes and self-delimiting codes}
+
+\begin{flexidefinition}{S1.4 - $\{13\}$}[Prefix]
+    We say that \textit{$x \in \NN$ is a prefix of $y \in \NN$} if there exists $z\in \NN$ such that $y = xz$. 
+\end{flexidefinition}
+
+\begin{flexidefinition}{S1.4 - $\{13\}$}[Prefix-free set]
+    $A \subseteq \NN$ is said to be prefix-free if no element in $A$ is the prefix of another element in $A$. 
+\end{flexidefinition}
+
+
+\begin{flexidefinition}{S1.4 - $\{13\}$}[Code, prefix code] Any function $D : \{0,1\}^\ast \to \NN$ is called a \textit{decoding function}. $\dom D$ is called the set of \textit{code words}, and $\range D$ is called the set of \textit{source words}. $D$ is a prefix-code if $\dom D$ is prefix-free. $E := D^{-1}$ is aid to be the encoding relation (or encoding function in the case that it is a function).
+\end{flexidefinition}
+
+\begin{flexidefinition}{S1.4 - $\{13\}$}[Self-delimiting code]
+    We define the self-delimiting encoding as
+    \begin{equation}
+        \bar x = 1^{l(x)}0x, \ \forall x \in \NN.
+    \end{equation}
+    Note that $l(\bar x) = 2 l(x) + 1$. $\bar x$ is also called the \textit{self-delimiting version of $x$}. Furhter note that $\{\bar x : x \in \NN\}$ is a prefix-free set.
+\end{flexidefinition}
+
+\begin{flexidefinition}{S1.11.1 - $\{74\}$}[Extending codes]
+$\{74\}$ $E$ is a relation on $\NN \times \{0,1\}^\ast$, that we can naturally extend to $\NN^\ast \times \{0,1\}^\ast$, by considering $E(\varepsilon = \varepsilon)$.
+\end{flexidefinition}
+
+\begin{flexidefinition}{S1.11.1 - $\{74\}$}[Uniquely decodable code]
+    We say that $E$ is uniquely decodable, if for all source sequence $y \in \NN^\ast$, the code words $x$ satisfying $E(x) = y$ are different than for any other source sequence $y'$.
+\end{flexidefinition}
+
+\begin{flexilemma}{S1.11.1 - $\{75\}$}[Prefix codes are decodable]
+    Let $D$ be a prefix-code. Then, $E = D^{-1}$ is uniquely decodable.
+\end{flexilemma}
+
+\begin{flexitheorem}{T1.11.1 - $\{76\}$}[Kraft inequality]
+    Let $l_1,l_2,\ldots$ be a finite or infinite sequence of natural numbers. There is a prefix-code (or a uniquely decodable code) $x_1,x_2,\ldots$ satisfying $l(x_n) = l_n$ iff 
+    \begin{equation}
+        \sum_{n} 2^{-l_n} \leq 1.
+    \end{equation}
+\end{flexitheorem}
+
+\begin{flexilemma}{S1.11.4 - $\{81\}$}[Shortest prefix-code]
+      $l^\ast(x) := \log x + \log \log x + \log \log \log x + \ldots$. Then, by setting $c := \sum_{x} 2^{-l^\ast(x)}$, one can define a prefix code of lengths $l_x := l^\ast(x) + \log c$.
+\end{flexilemma}
+
+
+\begin{flexidefinition}{D1.11.4 - $\{79\}$}[Self-delimiting codes] A prefix-code is called \textit{self-delimiting} if there is a Turing machine that decides whether a given word is a code word, never reading beyong the word it self, and moreover computes the decoding function. The \textit{minimum description length} is defined on the same page.
+\end{flexidefinition}
+
+
+\subsection{Optimal and universal codes}
+
+\begin{flexidefinition}{S1.11.3 - $\{77\}$}[Complete code]
+     A uniquely decodable code is complete, if by adding one element to the code, the code is not uniquely decodable anymore.
+\end{flexidefinition}
+
+\begin{flexitheorem}{S1.11.3 - $\{77\}$}[Characterization of complete codes]
+    A code is complete and uniquely decodable iff there is equality in the Kraft inequality.
+\end{flexitheorem}
+
+\begin{flexidefinition}{D1.11.3 - $\{77\}$}[Average code length]
+     Let $D$ be an injective prefix-code, and define $P$ to be a probability distribution on $\NN$. We define the \textit{average code length associated with $D$} as $L_{P,D} := \sum_{x \in \NN} P(x) l(D^{-1}(x))$.
+\end{flexidefinition}
+
+
+\begin{flexitheorem}{T1.11.2 - $\{78\}$}[Noiseless coding theorem]
+    Let $P$ be a distribution on $\NN$, and define the \textit{minimal average code length} 
+    \begin{equation}
+        L(P) = \min \left\{ L_{P,D} : D \text{ is an injective prefix-code} \right\}.
+    \end{equation}
+    Then, by letting $H(P) := \sum_{x\ in \NN} P(x) \log 1/P(x)$, one has
+    \begin{equation}
+        H(P) \leq L \leq H(P) + 1.
+    \end{equation}
+\end{flexitheorem}
+\begin{flexidefinition}{D1.11.5 - $\{80\}$}[Universal code]
+$\{81\}$ Let $C$ be an infinite set of uniquely decodable words, and $\NN$ be a set of source words with distribution $P$. $C$ is \textit{universal} if there exists $c > 0$ independant of $P$, s.t.
+\begin{equation}
+    \frac{\sum_{x \in \NN} P(x) l(C^{-1}(x))}{\max \left\{H(P),1 \right\}} \leq c.
+\end{equation}
+A universal code $C$ is said to be asymptotically optimal if there is a function $f$ satisfying $\limi{t} f(t) = 1$ such than
+\begin{equation}
+    \frac{\sum_{x \in \NN} P(x) l(C^{-1}(x))}{\max \left\{H(P),1 \right\}} \leq f(H(P)).
+\end{equation}
+\end{flexidefinition}
+
+
+$\{81\}$ $\{ \bar x : x \in \NN\}$ is universal but not asymptotically optimal. However, $\{\overline{l(x)}x : x \in 
+\NN \}$ is both universal and asymptotically optimal.
+
+
+
+
+
+
+
+
+
+\section{Computability theory}
+\subsection{Turing machines}
+
+The definition and behavior of Turing machines is given on pages $\{24-28\}$. We here do not review it, but however we put an emphasis on the definition of inputs and outputs, which is crucial for the consistency of the theory. 
+
+\begin{flexidefinition}{S1.7.1 - $\{28\}$}[I/O Turing Machines]
+{\label{def:computable function}  We say that $(x_1, \ldots, x_n) \in 
+\NN^n$ is \textit{presented as an input} to a Turing machine $M$, if at time step $0$, $\bar x = \bar x_1 \bar x_2 \ldots \bar x_n$ is written on the tape, and the first symbol (leftmost symbol) of $\bar x$ is scanned by the head of the Turing machine. Furthermore, if the machine $M$ halts during a given computation, the integer represented by the \textbf{maximal binary string (bordered by blanks) of which some bit is scanned} by the time the machine halts is called the \textit{output} of the computation.}
+\end{flexidefinition}
+
+\begin{flexidefinition}{E1.7.3 - $\{30\}$}[Encoding of Turing machines]
+    For each Turing machine $T: Q \times A \to S \times Q$, we associate an encoding. We define first $s = |Q \cup S| = \lceil \log(d(Q) + 5) \rceil$, and the encoding $e : Q \cup S \to \{0,1\}^s$. Let $r$ be the number of rules in the transition table. Note that $r \leq 3d(Q)$. Then,
+    \begin{equation}
+        E(T) = \bar s \bar r e(p_1)e(t_1)e(s_1)e(q_1) \ldots e(p_r)e(t_r)e(s_r)e(q_r).
+    \end{equation}
+    Note that $l(E(T)) \leq 4rs + 2 logrs + 4$, and $E(T)$ is self-delimiting.
+\end{flexidefinition}
+
+\begin{flexidefinition}{E1.7.3 - $\{30\}$}[Gödel indexing of Turing machines]
+$\{30\}$ By ordering the $E(T)$ with lexicographical ordering with increasing length, one defines the Gödel indexing $n(T)$ of each Turing machine. Accordingly, the Turing machines are now denoted $T_1, T_2, \ldots$. $\{30\}$ One can then define a universal Turing machine taking as input $1^i0p$ and outputting $T_i(p)$. 
+\end{flexidefinition}
+
+$\{90-92\}$ Read those pages for the note on the state-symbol product.
+
+\subsection{Oracle Turing machines}
+
+\begin{flexidefinition}{D1.7.7 - $\{ 38 \}$}[Oracle Turing machine]
+     Let $T$ be a Turing machine, and $A \subseteq \NN$. $T^A$ is said to be a Turing machine with oracle $A$, if at any time step of a computation, the machine can ask if the word written on its tape belongs to $A$, and make a decision about it.
+\end{flexidefinition}
+
+\begin{flexitheorem}{S1.7.4 - $\{39\}$}[Polynomial time reducibility]
+    We write $A \leq_T^P B$ if there exists $T$ an oracle Turing machine such that $T^B$ accepts $A$ in polynomial time.
+\end{flexitheorem}
+
+\subsection{Computable functions}
+
+$\{28-29\}$ Let $A \subseteq \NN^n$ and $f : A \to \NN$. We generally say that $f$ is a \textit{partial function}. In the case that $A = \NN^n$, we say that $f$ is \textit{total}. $A$ is called the \textit{domain} of $f$. We usually write $f^{(n)}$ if $f$ has $n$ variables. $\{29\}$ A partial function with range $\{0,1\}$ is called a \textit{predicate}.
+
+\begin{flexidefinition}{D1.7.1 - $\{28\}$}[Computable functions]
+    We say that $f : A \to \NN$ is \textit{computable} if there exists a Turing machine $M$, such that 
+\begin{enumerate}
+    \item for all $(x_1, \ldots, x_n)\in A$, the output of the computation when $M$ is presented with input $(x_1,\ldots,x_n)$ is $f(x_1,\ldots,x_n)$,
+    \item for all $(x_1, \ldots, x_n)\notin A$, $M$ does not halt.
+\end{enumerate}
+\end{flexidefinition}
+
+$\{31\}$ We denote the universal computable function defined in last section by $\nu^{(2)}(i,p)$. One can generalize universal computable functions to any number of variables.
+
+\begin{flexilemma} {E1.7.1/2 - $\{29\}$}[Examples of computable functions]
+    $l(x)$, $\bar x$, $g(\bar x y) = x$, $h(\bar x y) = y$ are partial computable. The successor function $\gamma^{(1)}(x) = x +1$, the zero function $\zeta^{(n)}(x_1,\ldots,x_n) = 0$, the projection function $\pi^{(n)}_m(x_1,\ldots,x_n) = x_m$, and the pairing function $\langle x,y\rangle = \bar x y$ are total computable.
+\end{flexilemma}
+
+$\{34\}$ We define an ordeing of computable functions to be exactly the same as for Turing machines: let $i \in \NN$, and consider $T_i$ in the standard ordering of Turing machines. $\phi_i$ denotes the associated computable function, and $\Omega_i$ its domain.
+
+
+\subsection{Semi-computable functions}
+
+$\{35\}$ We write $f(y/z,k) = p/q$ to mean $f(\langle \langle y,z \rangle, k\rangle = \langle p,q \rangle)$, with $y,z,k,p,q \in \NN$, in order to define a computable function from $\QQ_+ \times \NN \to \QQ_+$. We also write $f((-1)^yz,k) = (-1)^pq$ to mean $f(\langle \langle y,z \rangle, k\rangle = \langle p,q \rangle)$, with $z,k,q \in \NN$ and $y,p \in \{0,1\}$, in order to define a computable function from $\ZZ \times \NN \to \ZZ$, and from $\QQ \times \NN \to \QQ$ if $z,q \in \QQ_+$. 
+
+\begin{flexidefinition}{D1.7.4 - $\{35\}$}[Semicomputable functions]
+    \label{def:semicomputable functions}
+    $\{35\}$ A total function $f : \QQ \to \RR$ is \textit{upper semicomputable} if there exists a partial computable function $\phi : \QQ \times \NN \to \QQ$ such that $\phi(x,k+1) \leq \phi(x,k)$ for all $k \in \NN$ and $\limi{k} \phi(x,k) = f(x)$. $\{36\}$ A total function $f : \QQ \to \RR$ is \textit{lower semicomputable} if $-f$ is upper semicomputable. A total function $f : \QQ \to \RR$ is \textit{semicomputable} if it is upper or lower semicomputable. A total function $f : \QQ \to \RR$ is \textit{computable} if it is upper and lower semicomputable. Equivalently, a function $f : \QQ \to \RR$ is computable iff there exists a computable function $g : \QQ \times \NN \to \QQ$ such that $|f(x) - g(x,k)| \leq 1/k$, for all $x \in \QQ, k \in \NN$ (the speed of convergence is arbitrary).
+\end{flexidefinition}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \draw (-3,-3) rectangle (3,3);
+        \draw[pattern=north east lines, pattern color=black] (0,0) circle (2);
+        \draw[pattern=north west lines, pattern color=red] (-3,-3) rectangle (3,0);
+        \draw[pattern=north west lines, pattern color=blue]  (-3,0) rectangle (3,3);
+        \node at (0,3.2){semicomputable};
+        \node[blue] at (0,2.3){upper semicomputable};
+        \node[red] at (0,-2.3){lower semicomputable};
+        \node[black] at (0,0.2){computable};
+    \end{tikzpicture}  
+\end{figure}
+
+\subsection{Computable real numbers}
+\begin{flexidefinition}{E1.7.22 - $\{47 \}$}[Computable real number]
+    A real number $r \in [0,1]$ is called a \textit{computable real number} if there exists a computable function such that $r = 0.\omega$, with $\phi(i) = \omega_i$ for all $i$. $\omega$ is called a \textit{computable sequence}. A computable sequence of computable real numbers is a sequence $r_1, r_2, \ldots$ such that there is a computable function $\psi$ satisfying $\psi(i,j) = r_{i,j}$.
+\end{flexidefinition}
+
+\subsection{Computable sets}
+
+
+$\{32 \}$ A set $A \subseteq \NN$ is \textit{computably enumerable} (or c.e.) if it is the range of a total computable function $f$. We say the $f$ \textit{enumerates} $A$. Equivalently, $A$ is c.e. if it is accepted by a Turing machine. 
+
+$\{32 \}$ A set $A \subseteq \NN$ is \textit{computable} if it ihas a computable characteristic function. 
+
+Many lemmas about computably enumerable and computable sets are on pages $\{32-33 \}$.
+
+$\{ 34 \}$ We define $K_0 := \{ \langle x,y \rangle : y \in \Omega_x \}$ and $\{36\}$ $K := \{ x : x \in \Omega_x\}$.
+
+$\{36\}$ A function $f : \QQ \to \RR$ is lower semicomputable iff the set $\{(x,y) \in \NN \times \QQ: y < f(x)\}$ is computably enumerable.
+
+\section{Time and space complexity}
+
+$\{ 37 \}$ Let $T$ be a Turing machine. We say that $T$ has time complexity $t(n)$ if for all $x \in \NN$ satisfying $l(x) = n$, $T$ halts in less than $t(n)$ steps, for all $n \in \NN$. Further, we say that $T$ has time complexity $s(n)$ if for all $x \in \NN$ satisfying $l(x) = n$, if $T$ uses at most $s(n)$ cells of the tape during the computation, for all $n \in \NN$.
+
+To see the definition of the complexity classes $DTIME$, $NTIME$, $DSPACE$, $NSPACE$, $P$, $NP$, $PSPACE$, go to page $\{38\}$.
+
+$\{40\}$ A language over an alphabet $\Sigma$ is a subset of $\Sigma^\ast$. If a language is accepted in deterministeic (nondeterministic) polynomial time using oracle A, we write $L \in P^A$ ( $L \in NP^A$). We define the Polynomial Hierarchy according to $\Sigma_1^p = NP$, $\Delta_1^p = P$, $\Sigma_{i+1}^p = NP^{\Sigma_i^p}$, $\Delta_{i+1}^p = P^{\Sigma_i^p}$. 
+
+
+
+
+\section{Plain complexity $C(x)$}
+
+\subsection{Definitions}
+
+\begin{flexidefinition}{D2.1.1 - $\{105\}$}[Plain complexity with respect to a method]
+    Let $T$ be a computable function. $\{105\}$ We define the complexity of $x \in \NN$ with respect to $T$ as
+\begin{equation}
+    C_T(x|y) = \min \left\{l(p) : T(\langle y, p \rangle) = x \right\},  \ \forall x,y \in \NN.
+\end{equation}
+\end{flexidefinition}
+
+$\{105\}$ Choose an enumeration of computable function $T_1, \ldots, T_n, \ldots$. $\{105\}$ Define $U: =T_0$ to be a universal Turing machine satisfying
+\begin{equation}
+    U(\langle y, n, x \rangle) = T_n(\langle y, x \rangle), \ \forall n,x,y \in \NN. 
+\end{equation}
+
+\begin{flexitheorem}{T2.1.1 - $\{105\}$}[Existence of additively optimal functions]
+    $U$ is an additively optimal universal computable function.
+\end{flexitheorem}
+
+\begin{flexidefinition}{D2.1.2 - $\{106\}$}[Plain Kolmogorov complexity]
+    We define the conditional Kolmogorov complexity $C(\cdot | \cdot)$ as follows 
+    \begin{equation}
+        C(x|y) := C_U(x|y), \  \forall x,y \in \NN,
+    \end{equation}
+    and the unconditional Kolmogorov complexity $C(\cdot)$ as follows
+    \begin{equation}
+        C(x) := C(x|\epsilon),  \ \forall x \in \NN.
+    \end{equation}
+\end{flexidefinition}
+
+$\{105\}$ Let $p \in \NN$ such that $l(p) = C_T(x)$ and $T(\langle \epsilon, p \rangle) = x$. Then, $p$ is called a \textit{shortest program for $x$ by $\phi$}.
+$\{109\}$ We also define
+\begin{equation}
+    C(x,y|z) := C(\langle x,y \rangle | z)
+\end{equation}
+and 
+\begin{equation}
+    C(x|y,z) := C(x |\langle y,z \rangle)
+\end{equation}
+
+\subsection{Length-conditional complexity}
+
+This is an attempt to eliminate the non-monotonicity on prefixes.
+\begin{flexidefinition}{D2.2.2 - $\{119\}$}[Length-conditional complexity]
+    The quantity $C(x|l(x))$ is called the \textit{length-conditional complexity} of $x \in \NN$.
+\end{flexidefinition}
+
+
+\begin{flexilemma}{S2.2 - $\{119\}$}[Upper bound length-conditional complexity]
+    \begin{equation}
+        C(x|l(x)) \leq C(x) + O(1).
+    \end{equation}
+\end{flexilemma}
+
+$\{119\}$ $C(x|l(x))$ is however still non-monotonic on prefixes.
+
+\subsection{Main results}
+
+\begin{flexilemma}{S2.1.1 - $\{107\}$}[Kolmogorov complexity as minimization of a two-part code]
+    \begin{equation}
+        C(x|y) = \min_{n,p \in \NN} \{l(\bar n p) : T_n(\langle y , x \rangle)\} + O(1), \  \forall x,y \in \NN.
+    \end{equation}
+\end{flexilemma}
+
+\begin{flexitheorem}{T2.1.2 - $\{108\}$}[Main upper bound of plain complexity]
+    \begin{equation}
+        C(x) \leq l(x) + O(1), \ \ C(x|y) \leq C(x) + O(1), \ \ \forall x \in \NN.
+    \end{equation}
+\end{flexitheorem}
+
+\begin{flexitheorem}{S2.1.3 - $\{111\}$}[Invariance theorem w.r.t. reference machine]
+    Let $T_n,T_m$ be two additively optimal universal Turing machines 
+    \begin{equation}
+        C_{T_n}(x|y) = C_{T_m}(x|y) + O(1).
+    \end{equation}
+\end{flexitheorem}
+
+\begin{flexitheorem}{S2.1.3 - $\{112\}$}[Invariance theorem w.r.t. numbering]
+    $\{T_{n'}:  n' \in \NN\}$ be an acceptable numbering, and let $U'$ be such that
+    \begin{equation}
+        U'(\langle y, n', x \rangle) = T_{n'}(\langle y, x \rangle), \ \forall n',x,y \in \NN. 
+    \end{equation}
+    Then,
+    \begin{equation}
+        C_{U'}(x|y) = C(x|y) + O(1).
+    \end{equation}
+\end{flexitheorem}
+
+\subsection{Useful results}
+\begin{flexilemma}{E2.1.3/4, P2.1.2 - $\{109,113\}$}[Invariant operations]
+    \begin{align}
+        C(xx|y) &= C(x|y) + O(1)\\
+        C(x^R|y) &= C(x|y) + O(1)\\
+        C(T_n(x)|y) &= C(x|y) + O(1)\\
+        C\left(x^{C(x)}\right) &= C(x) + O(1), \ \forall x \in \NN
+    \end{align}
+\end{flexilemma}
+
+\begin{flexilemma}{E2.1.5, P2.1.9 - $\{109,110,114\}$}[Almost subaddtivity]
+    \begin{align}
+        C(x,y|z) &\leq C(x|z) + C(y|z) + 2\log_2\min (C(x|z), C(y|z)) + O(1)\\
+        C(x,y|C(x),z) &\leq C(x|z) + C(y|z) + O(1)\\
+        C(x,y) &\leq C(x) + 2l(C(x)) + C(y|x) + O(1)
+    \end{align}
+    If there exists $n \in \NN$ s.t. $C(x),C(y) \leq n$, then $C(x,y) \leq 2n + O(1)$.
+\end{flexilemma}
+
+\begin{flexilemma}{P2.1.1 - $\{113\}$}[Simple sequence]
+    \begin{align}
+        C(0^n|n) &= O(1)
+    \end{align}
+\end{flexilemma}
+
+\begin{flexilemma}{P2.1.5 - $\{113\}$}[Manipulation of variable]
+    \begin{align}
+        C(x|y) &\leq C(x,z|y) + O(1)\\
+        C(x|y,z) & \leq C(x|y) + O(1)\\
+        C(x,y|z) & = C(y,x|z) + O(1) , \ \forall x,y,z \in \NN
+    \end{align}
+\end{flexilemma}
+\begin{flexitheorem}{P2.1.6 - $\{114\}$}[Relations through computability]
+    \begin{align}
+        C(T_n(x)|y) & \leq C(x|y) + 2 l(n) + O(1)\\
+        C(y|T_n(x)) & \geq C(y|x) - 2 l(n) + O(1), \ \forall x,y,n \in \NN
+    \end{align}
+    If $T_n$ is one-to-one, it becomes
+    \begin{align}
+        |C(T_n(x)|y)- C(x|y)| & \leq  2 l(n) + O(1)\\
+        |C(y|T_n(x)) - C(y|x)| & \geq  2 l(n) + O(1), \ \forall x,y,n \in \NN
+    \end{align}
+\end{flexitheorem}
+
+\subsection{Properties as an integer function}
+
+\begin{flexitheorem}{T2.3.1 - $\{126\}$}[Unboundedness]
+    \begin{enumerate}[label=(\alph*)]
+        \item $C(x)$ is unbounded,
+        \item $m(x) = \min \{C(y) : y \geq x \}$ is unbounded,
+        \item $m(x)$ is unbounded slowlier than any other unbounded computable function.
+    \end{enumerate}
+\end{flexitheorem}
+
+\begin{flexitheorem}{T2.3.2 - $\{127\}$}[Uncomputabilility]
+    $C(x)$ is uncomputable, and there is not partial function defined on infinitely many points that agrees with $C(x)$ on its domain of definition. However, $C(x)$ is semicomputable from above.
+\end{flexitheorem}
+
+\begin{flexitheorem}{S2.3 - $\{121\}$}[Continuity, Logarithmicity, Fluctuability, High-complexity runs]
+    \begin{enumerate}[label=(\alph*)]
+        \item
+        \begin{equation}
+            |C(x+y) - C(y)| \leq 2l(y) + O(1).
+        \end{equation}
+        \item $C(x)$ hugs $\log x$, i.e. $C(x) \leq \log x - k$ for at most $2^{n -k}$ numbers between $2^{n-1}$ to $2^n$.
+        \item $C(x)$ fluctuates rapidly, i.e. there exists $x_1,x_2$ within distance $\sqrt{x}$ of $x$ such that $C(x_1) \geq l(x /2) + c$ and $C(x_2) \leq l(x)/2 - c$.
+    \end{enumerate}
+        \item For each $c$ there is $d$ such that there is no $d$-run of $c$-incompressible numbers, and conversely for each $d$, there is a $c$ such that there are $d$-runs of $c$-incompressible numbers.
+\end{flexitheorem}
+
+For the definition of complexity monotonic on prefixes, see Exercise 2.3.2 $\{130\}$.
+For properites of Kolmogorov complexity of infinite sequences, see Exercise 2.3.4, 2.3.5 pages $\{131 - 132\}$.
+
+\subsection{Function complexity}
+\begin{flexidefinition}{P2.1.14 - $\{115\}$ }[Function complexity]
+    We define the \textit{function complexity} as
+\begin{equation}
+    C(f|D) := \min \left\{ l(p): U(\langle x, p \rangle) = f(x), \forall x \in D \right\},
+\end{equation}
+where $D \subseteq \NN$ and $f : \NN \to \NN$.
+\end{flexidefinition}
+
+\begin{flexilemma}{P2.1.14 - $\{116\}$}[Upper bound function complexity]
+    Let $f : \NN \to \NN$ be a partial computable function. Then,
+    \begin{equation}
+        C(f|\leq n) \leq \log n + O(1).
+    \end{equation}
+\end{flexilemma}
+
+
+\subsection{Complexity of infinite sequences}
+
+See E2.2.15/16 on page $\{125\}$ to see definitions of complexity for infinite sequences, although not that interesting.
+
+\subsection{Incompressibility}
+
+\begin{flexilemma}{S2.2 - $\{116\}$}[Existence of incompressible sequence]
+    Let $n \in \NN$. There exists $x \in \NN$, with $l(x) = n$, such that $C(x) \geq n$. This follows from a counting argument.
+\end{flexilemma}
+\begin{flexidefinition}{D2.2.1 - $\{116\}$}[$c$-incompressibility]
+$\{116\}$ Let $c \in \NN$. We say that $x \in \NN$ is $c$-incompressible if $C(x) \geq l(x) - c$.
+\end{flexidefinition}
+\begin{flexilemma}{S2.2 - $\{117\}$}[Counting of incompressible sequences]
+    Let $n,c \in \NN$. There are at least $2^n - 2^{n-c} + 1$ $c$-incompressible elements $x \in \NN$, with $l(x) = n$.
+\end{flexilemma}
+
+\begin{flexitheorem}{T2.2.1 - $\{117\}$}[Generalized counting of incompressible sequences]
+    Let $n,c,y \in \NN$, and $A \subseteq \NN$. Then, there are at least $d(A)(1 - 2^{-c}) + 1$ elements $x \in A$ satisfying $C(x|y) \geq \log d(A) - c$.
+\end{flexitheorem}
+
+\begin{flexilemma}{E2.2.1 - $\{117\}$}[Incompressible strings contains compressible strings]
+    Let $x \in \NN$ of length $n$ be an $c$-incompressible string. Then, for all $v \in \NN$ being a substring of $x$, $C(v) \geq l(v) - O(\log n)$ (here note that $O(log n)$ can be big compared to $l(v)$, so $v$ might be compressible).
+\end{flexilemma}
+
+\begin{flexilemma}{E2.2.2 - $\{118\}$}[The shortest program is incompressible]
+    There exists $c > 0$, such that for all $x \in \NN$, and all shortest programs $p$ for $x$ by $U$, $C(p) \geq l(p) - c$.
+\end{flexilemma}
+
+$\{120\}$ A set $A \subseteq \NN$ is called \textit{meager} if $\lim_{n \to \infty} d(A^{\leq n})/2^n = 0$, with $A^{\leq n} = \{x \in A: l(x) \leq n\}$.
+\begin{flexilemma}{$\{120\}$}[Incompressible elements in meager sets]
+    If $A$ is computable and meager, then for all $c \in \NN$ there is only finitely many $c$-incompressible elements in $A$.
+\end{flexilemma}
+
+\begin{flexidefinition}{D2.2.3 - $\{120\}$}[Randomness deficiency] We define the \textit{randomness deficiency of $x$ relative to $A$} as \begin{equation}
+    \delta(x|A) := l(d(A)) - C(x|A).
+\end{equation}
+\end{flexidefinition}
+
+NOTE: how to define $C(x|A)$ ??? I guess it can be formalized through an oracle Turing machine !
+
+\begin{flexitheorem}{T2.2.2 - $\{120\}$}[Distribution of randomness deficiency]
+    The quantity $d(\{x: \delta(x|A) \geq k \}) \leq d(A)/2^{k-1}$.
+\end{flexitheorem}
+
+\begin{flexitheorem}{E2.2.6 - $\{122\}$}[Number of incompressible constants]
+    There exists $d > 0$ such that there are at least $2^n / d$ strings of length $n$ satisfying $C(x) \geq n$ and $C(x|n) \geq n$.
+\end{flexitheorem}
+
+\subsection{Randomness of finite sequences}
+
+\begin{flexidefinition}{D2.4.1 - $\{135\}$}[$P$-test of randomness]
+    Let $\delta : \NN \to \NN$ be a total function, and $P$ be a computable probability distribution on $\NN$ (i.e. $f(n) := P(\{n\})$ is a computable function). $\delta$ is said to be  a $P$-test if
+    \begin{enumerate}[label = (\alph*)]
+        \item $\delta$ is lower semicomputable,
+        \item $V_{n,m} := \{x \in \NN : l(x) = n, \delta(x) \leq m \}$ satisfies $P(V_{n,m}) \leq 2^{-m}$, for all $n,m \in \NN$.
+    \end{enumerate}
+\end{flexidefinition}
+
+$\{136\}$ Note that as $\delta$ is total, we can change hypothesis (a) to be $\delta$ is computable.
+
+\begin{flexidefinition}{D2.4.2 - $\{137\}$}[Universal $P$-test]
+    A universal $P$-test is a $P$-test $\delta_0$ such that for every other $P$-test $\delta$, there exists $c > 0$ such that $\delta_0(x) \geq \delta(x) - c$, for all $x \in \NN$.
+\end{flexidefinition}
+
+\begin{flexidefinition}{Implicitly defined $\{140\}$}[Randomness]
+    Let $\delta_0$ be a universal $P$-test. We say that $x\in \NN$ is $c$-random with respect to $\delta_0$ and $P$ if $\delta_0(x) \leq c$.
+    
+\end{flexidefinition}
+
+\begin{flexitheorem}{L2.4.1, T2.4.1 - $\{137-138\}$}[Existence of universal $P$-test]
+    There exists an effective enumeration $\delta_1, \delta_2, \ldots$ of $P$-tests. Moreover, define $\delta_0(x|P) := \max \{\delta_y(x) - y : y \geq 1 \}$ is a universal $P$-test.
+\end{flexitheorem}
+
+\begin{flexitheorem}{T2.4.2 - $\{139\}$}[Universal test for the uniform law]
+    The function $\delta_0(x|L) = l(x) - C(x|l(x)) -1$ is a universal test for the uniform distribution.
+\end{flexitheorem}
+
+\begin{flexidefinition}{D2.4.3 - $\{140\}$}[Reference randomness]
+    We say that $x \in \NN$ is $c$-random if $\delta_0(x|L) \leq c$.
+\end{flexidefinition}
+
+
+\subsection{Randomness of infinite sequences}
+
+\begin{flexitheorem}{T2.5.1 - $\{143\}$}[No naïve way of defining random infinite sequences]
+    For any $f$ satisfying $\sum_{n=1}^\infty 2^{-f(n)} = \infty$, and any $\omega \in \{0,1\}^\omega$, there are infinitely many $n \in \NN$ such that 
+    \begin{equation}
+        C(\omega_{1:n}|n) \leq n - \log n.
+    \end{equation}
+\end{flexitheorem}
+
+\begin{flexidefinition}{D2.5.1 - $\{148\}$}[Sequential test]
+    Let $\mu$ be a computable probability distribution on the space $\{0,1\}^\infty$. A total function $\delta : \{0,1\}^\infty \to \NN \cup \{ \infty\}$ is a sequential $\mu$-test if 
+    \begin{enumerate}[label = (\alph*)]
+        \item $\delta : \omega \mapsto \sup_{n \in \NN} \{ \gamma(\omega_{1:n})\}$, where $\gamma : \NN \to \NN$ is a total lower semicomputable function, i.e. $V = \{ (m,y) : \gamma (y) \geq m\}$ is a c.e. set,
+        \item $\mu \{ \omega : \delta(\omega) \geq m \} \leq 2^{-m}$ for all $m \geq 0$.
+\end{enumerate}
+\end{flexidefinition}
+
+$\{148\}$ One can require $\gamma$ to be computable without changing the definition, see the book for more details.
+
+$\{149\}$ Note that $V_m := \{ \omega : \delta(\omega) \geq m \} = \cup \{ \Gamma_y : (m,y) \in V\}$. We have
+\begin{equation}
+    \delta(\omega) < \infty \iff \omega \notin \bigcap_{m=1}^\infty V_m.
+\end{equation}
+
+\begin{flexidefinition}{D2.5.2 - $\{149\}$}[Randomness]
+    Let ${\bf V}$ be the set of all sequential $\mu$-tests. $\omega$ is said to be $\mu$-random if 
+    \begin{equation}
+        \omega \notin \bigcup_{V \in {\bf V}} \bigcap_{m=1}^\infty V_m.
+    \end{equation}
+    Note that $\mu \left(U := \bigcup_{V \in {\bf V}} \bigcap_{m=1}^\infty V_m\right) = 0$. $U$ is said to be the maximal constructive $\mu$-null set.
+    
+\end{flexidefinition}
+
+\begin{flexidefinition}{D2.5.3 - $\{149\}$}[Universal sequential test]
+    A universal sequential $\mu$-test $f$ is such that $f(\omega) \geq \delta(\omega) - c$, for all $\delta$ sequential $\mu$-test.
+\end{flexidefinition}
+
+\begin{flexitheorem}{T2.5.2 - $\{150\}$}[Existence of universal sequential test]
+    There is a universal sequential $\mu$-test.
+\end{flexitheorem}
+
+
+\begin{flexitheorem}{T2.5.3 - $\{152\}$}[Miller-Yu theorem]
+    \begin{enumerate}[label = (\roman*)]
+        \item Let $f : \NN \to \NN$ be a computable function with $\sum_n 2^{-f(n)} < \infty$. For every $\lambda$-random $\omega$ there is a constant such that $C(\omega_{1:n}) \geq n -f(n) - c$.
+        \item There exists $f : \NN \to \NN$ be a computable function with $\sum_n 2^{-f(n)} < \infty$ such that for all $\lambda$-nonrandom $\omega$ there exists $n$ such that $C(\omega_{1:n}) < n -f(n) - c$.
+    \end{enumerate}
+\end{flexitheorem}
+
+\begin{flexidefinition}{D2.5.5 - $\{153\}$}[Computably convergent function]
+    $\sum_{i=1}^\infty a_i$ is computably convergent if there exists a computable sequence $n_1, \ldots, n_m, \ldots$ such that 
+    \begin{equation}
+        \sum_{i=n_m}^\infty a_i \leq 2^{-m}.
+    \end{equation}
+    
+\end{flexidefinition}
+    
+\begin{flexitheorem}{T2.5.5 - $\{153\}$}[Proper supset of random sequences]
+    Let $f(n)$ be computable such that $\sum_{i=1}^\infty 2^{-f(i)}$ is computably convergent. Let $\omega$ be random, then $C(\omega_{1:n}|n) \geq n - f(n)$ for some $n$ onward.
+    
+   
+\end{flexitheorem}
+
+\begin{flexitheorem}{T2.5.6 - $\{154\}$}[Proper subset of random sequences]
+    Let $\omega \in \{0,1\}^\infty$.
+    \begin{enumerate}[label = (\roman*)]
+        \item If $\exists c > 0$ s.t. $\exists^\infty n \in \NN$ $C(\omega_{1:n}) \geq n - c$, then $\omega$ is random.
+        \item The set of sequences satisfying the above condition is of measure $1$.
+    \end{enumerate}
+\end{flexitheorem}
+
+$\{157 - 159\}$ Discussion on Mises-Wald-Church and Kolmogorov-Loveland stochastic sequences.
+
+\subsection{Statistical properties of random sequences}
+
+Here, the statistical properties can never be established "sharply" for random sequences, but weakly, by introducing deficiency functions.
+
+\begin{flexidefinition}{D2.6.2 - $\{169\}$}[Deficiency functions]
+    Let $c_1 \geq 0$ be a constant. We define the the class of $c_1$-deficiency functions $\delta : \NN \to \NN$ as satisfying $K[n, \delta(n)|n - \delta(n)] \leq c_1$. We choose a $c_1$ so large that all the common sublinear functions are $c_1$-deficient, and we refer to this class as \textit{deficiency functions}.
+\end{flexidefinition}
+
+The proofs in this chapter are mostly by contradiction.
+\begin{flexilemma}{L2.6.1 - $\{169\}$}[Statistical properties of random sequences] There exists $c>0$, s.t. if $C(x) \geq n - \delta(n)$, then
+    \begin{equation}
+        \left| \# \{ x_i = 1\} - \frac{n}{2} \right| \leq \sqrt{\frac{3(\delta(n) + c)n}{2\log e}}\cdot
+    \end{equation}
+    
+\end{flexilemma}
+
+\begin{flexilemma}{L2.6.2 - $\{170\}$}[Even ones and zeros remove randomness] There exists $c>0$, s.t. if
+    \begin{equation}
+        \left| \# \{ x_i = 1\} - \frac{n}{2} \right| \leq 2^{-\delta(n)-c}\sqrt{n},
+    \end{equation}
+then $C(x) < n - \delta(n)$.
+\end{flexilemma}
+
+\begin{flexilemma}{L2.6.2 - $\{171\}$}[Fixed frequency of ones remove randomness] There exists $c>0$, s.t. if
+    \begin{equation}
+        \left| \# \{ x_i = 1\} - \frac{n}{2} \right| = j,
+    \end{equation}
+then $C(x|n) < n - \frac{1}{2}\log n + K[j|n] + c$.
+\end{flexilemma}
+
+
+\begin{flexitheorem}{L2.6.1 - $\{172\}$}[Fixed frequency of ones remove randomness] Let $y \in \{0,1\}^l$, with $l < \log n$. There exists $c>0$, s.t. for all $x \in \{0,1\}^n$, if $C(x) \geq n - \delta(n)$, then
+    \begin{equation}
+        \left| \# \{ x_i\ldots x_{i+l} = y\} - \frac{n}{2^l} \right| \leq \sqrt{\alpha 2^{-l} n},
+    \end{equation}
+with $\alpha = \frac{3l}{\log e} \left(K(y|n) + \log l + \delta(n) + c \right)$.
+\end{flexitheorem}
+
+\begin{flexitheorem}{L2.6.2 - $\{174\}$}[Fixed frequency of ones remove randomness] Let $x \in \{0,1\}^n$, s.t. $C(x) \geq n - \delta(n)$. Then, for sufficiently large $n$, each block of length
+    \begin{equation}
+        l = \log n - \log \log n - \log(\delta(n) + \log (n)) + O(1)
+    \end{equation}
+    occurs at least one time.
+\end{flexitheorem}
+
+\subsection{Algorithmic properties of $C$}
+
+\begin{flexidefinition}{T2.7.1 - $\{177\}$}[Post's simple set]
+    A simple set is a computably enumerable set such that its complement is infinite and there is no infinite computably enumerable subset.
+\end{flexidefinition}
+
+\begin{flexidefinition}{C2.7.1 - $\{178\}$}[Immune set]
+    An immune set is a set that complement is simple.
+\end{flexidefinition}
+
+\begin{flexitheorem}{T2.7.1 - $\{177\}$}[Uncomputability]
+    See the book for details.
+\end{flexitheorem}
+
+\begin{flexitheorem}{C2.7.1 - $\{178\}$}[RAND is immune]
+    $\{ C(x) \geq l(x) \}$ is immune.
+\end{flexitheorem}
+
+\begin{flexilemma}{T2.7.2 - $\{181\}$}[Barzdins's lemma]
+
+    \begin{enumerate}[label = (\alph*)]
+        \item Any characteristic sequence $\chi$ of a computably enumerable set $A$ satisfies $C(\chi_{1:n}|n) \leq \log n + c$ for all $n$, where $c$ is a constant dependant on $A$ (but not on $n$).
+        \item Moreover, there is a computably enumerable set such that its characteristic sequence $\chi$ satisfies $C(\chi_{1:n}) \geq n$ for all $n$.
+    \end{enumerate}
+\end{flexilemma}
+
+\subsection{Algorithmic information theory}
+
+\begin{flexidefinition}{D2.8.1 - $\{189\}$}[Algorithmic information]
+    We define the algorithmic information about $y$ contained in $x$ as
+    \begin{equation}
+        I_C(x:y) = C(y) - C(y|x).
+    \end{equation}
+\end{flexidefinition}
+
+\begin{flexitheorem}{T2.8.2/C2.8.1 - $\{192-193\}$}[Almost symmetry of algorithmic information]
+    \begin{equation}
+        |I_C(x:y) - I_C(y:x)| = O(\log C(x,y)).
+    \end{equation}
+    This follows from
+    \begin{equation}
+        C(x,y) = C(x) + C(y|x) + O(\log C(x,y)).
+    \end{equation}
+\end{flexitheorem}
+
+
+\begin{flexitheorem}{T2.8.1 - $\{190\}$}[Entropy upper bounds complexity]
+    Let $x \in \{0,1\}^{nm}$, and denote by $p_y$ be the frequency of $y \in \{0,1\}^n$ as a block of $x$. Denote by $H = - \sum_{y \in \{0,1\}^n} p_y \log p_y$. Then,
+    \begin{equation}
+        C(x) \leq m (H + 2^{n+1}l(m)/m).
+    \end{equation} 
+\end{flexitheorem}
+
+See exercise 2.8.4 page $\{195\}$ for interesting relations between $C(x)$ and the entropy.
+
+\section{Self-delimiting complexity $K(x)$}
+
+\begin{flexidefinition}{D3.1.1 - $\{204\}$}[Computable prefix function]
+    A partial computable prefix function is a partial computable function $\phi$ such that $\dom \phi$ is prefix-free.
+\end{flexidefinition}
+
+\begin{flexitheorem}{D3.1.2 - $\{204\}$}[Computable prefix functions are enumerable]
+    There is computable way to enumerate partial computable prefix functions from partial computable functions.
+\end{flexitheorem}
+
+\begin{flexidefinition}{$\{206\}$}[Universal computable prefix function]
+    A universal computable prefix function is a partial computable prefix function $U$ such that for all partial computable prefix function $\psi$, there exists $n \in \NN$ such that $U(\langle n, x \rangle) = T(x)$, for all $x \in \NN$.
+\end{flexidefinition}
+
+\begin{flexidefinition}{$\{206\}$}[Additively optimal niversal computable prefix function]
+    An additively optimal universal computable prefix function is a universal computable prefix function $U$ such that for all partial computable prefix function $\psi$, there exists $c > 0$ such that
+    \begin{equation}
+        C_{U}(x|y) \leq C_{\psi}(x|y) + c.
+    \end{equation}
+\end{flexidefinition}
+
+\begin{flexitheorem}{T3.1.1 - $\{206\}$}[Existence theorem]
+    There exists an additively optimal universal computable prefix function. We fix one additively optimal universal computable prefix function $\psi_0$, and we let 
+    \begin{equation}
+        K(x|y) := C_{\psi_0}(x|y), \ and \ K(x) := K(x|\epsilon).
+    \end{equation}
+    
+\end{flexitheorem}
+
+\begin{flexidefinition}{D3.1.3 - $\{ 205\}$}[Self-delimiting strings]
+	A string is said to be self-delimiting with respect to $T$ conditional on $y$ if $T(\langle x, y \rangle) < \infty$. A string is said to be self-delimiting if $U(x) < \infty$.
+\end{flexidefinition}
+
+\subsection{Main results}
+
+\begin{flexilemma}{Example 3.1.3-4 - $\{207\}$}[Additivity]
+
+\begin{align}
+	K(x,y) = K(xy) + O(1) &= K(x) + K(y) + O(1)\\
+	C(x,y) = C(xy) + O(1) &= K(x) + C(y) + O(1)
+\end{align}
+	
+\end{flexilemma}
+
+\begin{flexidefinition}{$\{207-8\}$}[Links with plain complexity]
+	\begin{align}
+		K(x) & \leq C(x) + K(C(x)) + O(1)\\
+		C(x|y) &\leq K(x|y) \leq C(x|y) + l^\ast(C(x|y)) + O(1)\\
+		K(x) &= C(x) + C(C(x) + O(C(C(C(x))))\\
+		C(x) &= K(x) - K(K(x) + O(K(K(K(x))))\\
+		C(x) &= K(x|C(x)) + O(1)
+	\end{align}
+\end{flexidefinition}
+
+\begin{flexitheorem}{T3.2.1 - $\{212\}$}[Tight upper bound]
+	\begin{equation}
+		K(x) \leq l(x) + K(l(x)) + O(1),
+	\end{equation}
+	and this upper bound is attained for every length. Moreover, there are at most $2^{n-r+O(1)}$ strings of length $n$ such that $K(x) \leq n + K(n) - r$.
+\end{flexitheorem}
+
+\subsection{Incompressibility}
+
+\begin{flexidefinition}{D3.2.1 - $\{213\}$}[Incompressible string]
+	A self-delimiting string is said to be $c$-incompressible if $K(x) \geq l(x) - c$, and said to be incompressible if it is $0$-incompressible.
+\end{flexidefinition}
+
+\subsection{Random sequences}
+
+\begin{flexitheorem}{T3.5.1 - $\{223\}$}[Characterization of Martin-Löf random sequences]
+    An infinite binary sequence $\omega$ is Martin-Löf random w.r.t the uniform distribution iff there is a constant $c$ such that for all $n \in \NN$, $K(\omega_{1:n}) \geq n - c$, i.e. $\rho_0(\omega|\lambda)$ is a universal sequential Martin-Löf test for the uniform distribution.
+\end{flexitheorem}
+
+\begin{flexidefinition}{D3.5.1 - $\{226\}$}[Halting probability]
+    The halting probability is the real number defined as 
+    \begin{equation}
+        \Omega = \sum_{U(p) < \infty} 2^{\ell(p)}.
+    \end{equation}
+\end{flexidefinition}
+
+\begin{flexitheorem}{C3.5.2 - $\{228\}$}[Randomness of $\Omega$]
+    $\Omega$ is Martin-Löf random. The proof is effected through the characterization via prefix Kolmogorov complexity.
+\end{flexitheorem}
+
+\subsection{Algorithmic information theory}
+
+$\{250\}$ We define 
+\begin{equation}
+    I(x : y) := K(y) - K(y | \langle x, K(x) \rangle).
+\end{equation}
+
+\begin{flexitheorem}{T3.8.2 - $\{250\}$}[Symmetry of information]
+    \begin{equation}
+        I(x:y) = I(y:x) + O(1).
+    \end{equation}
+\end{flexitheorem}
+
+\section{Algorithmic Probability}
+
+\subsection{Lower semicomputable functions}
+
+Recall that we define lower semicomputable functions according to Definition D1.7.4.
+
+\begin{flexidefinition}{D4.1.1 - $\{263\}$}[Universal lower semicomputable function]
+    A lower semicomputable function $f$ is universal if there is an enumeration of lower semicomputable functions $f_1,f_2,\ldots$, such that $f(\langle i,x \rangle) = f_i(x)$, for all $i,x \in \NN$.
+\end{flexidefinition}
+
+\begin{flexilemma}{L4.1.1 - $\{263\}$}[Existence]
+    There is a universal lower semicomputable function.
+\end{flexilemma}
+
+\begin{flexidefinition}{D4.1.2 - $\{264\}$}[Lower semicomputable real number]
+    A real number $x$ is lower semicomputable if the set of rational numbers below it is computably enumerable.
+\end{flexidefinition}
+
+\subsection{Measure Theory}
+
+$\{265\}$ Let $\BB$ be a finite or countably infinite set. 
+%  We consider the continuous sample space $S := \BB^\infty$. A cylinder set is a set 
+% \begin{equation}
+%     \Gamma_x = \{x\omega : \omega \in \BB^\infty \},
+% \end{equation}
+% with $x \in \BB^\ast$. We set $\GGG := \{\Gamma_x : x \in \BB^\ast \}$.
+
+% $\{265\}$ A function $\mu : \GGG \to \RR$ defines a probability measure if 
+% \begin{align}
+%     \mu(\Gamma_\epsilon) &= 1\\
+%     \mu(\Gamma_x) &= \sum_{b \in \BB} \mu(\Gamma_{xb}).
+% \end{align}
+% From now on, we make the confusion between the function $\mu' : \BB^\ast \to \RR$ satisfying $\mu'(x) = \mu(\Gamma_x)$, and $\mu$.
+
+\begin{flexidefinition}{D4.2.1 - $\{265\}$}[Measure, semimeasure]
+    A function $\mu : \BB^\ast \to \RR$ is a probability measure (in short measure) if 
+    \begin{align}
+        \mu(\epsilon) &= 1,\\
+        \mu(\Gamma_x) &= \sum_{b \in \BB} \mu(\Gamma_{xb}).
+    \end{align}
+    and is a semimeasure if 
+    \begin{align}
+        \mu(\epsilon) &\leq 1,\\
+        \mu(\Gamma_x) &\geq \sum_{b \in \BB} \mu(\Gamma_{xb}).
+    \end{align}
+\end{flexidefinition}
+$\{266\}$ One can transform a semimeasure into a measure by adding an element $u$ not in $\BB$.
+
+\begin{flexidefinition}{D4.2.2 - $\{266\}$}[Semicomputable semimeasure]
+    A semimeasure $\mu$ is semicomputable (resp. computable) if the function $\mu$ is semicomputable (resp. computable).
+\end{flexidefinition}
+
+\subsection{Discrete sample space}
+
+$\{267\}$ A discrete semimeasure is a semimeasure $P$ with $\BB = \NN$, and $P(w) = 0$ for all $w \in \BB^\ast$ such that $\ell(w) \geq 2$. This engenders the rather simple equivalent definition D4.3.1. 
+
+\begin{flexidefinition}{D4.3.2 - $\{268\}$}[Universal discrete semimeasure]
+    Let $\MM$ be a class of discrete semimeasures. A semimeasure $P_0$ is universal for $\MM$ if $P_0 \in \MM$ and for all $P \in \MM$ there exists a constant $c_P$ such that $c_PP_0(x) \geq P(x)$, for all $x \in \NN$.
+\end{flexidefinition}
+
+\begin{flexitheorem}{T4.3.1 - $\{269\}$}[Existence universal lower semicomputable discrete semimeasure]
+    There is a semimeasure $\udsm$ that universal for the class of lower semicomputable semimeasures. In particular, we take
+    \begin{equation}
+        \udsm (x) := \sum_{j\geq 1} 2^{-K(j)}P_j(x).
+    \end{equation}
+\end{flexitheorem}
+The above semimeasure is basically defined as computable convex sum of all the lower semicomputable semimeasures.
+
+\begin{flexidefinition}{D4.3.3 - $\{271\}$}[Conditional probability mass functions]
+    Let $f(x,y)$ be a lower semicomputable function such that for all $y$, $\sum_x f(x,y) \leq 1$. Then, $P(x|y) := f(x,y)$ is called a lower semicomputable conditional probability mass function.
+\end{flexidefinition}
+\begin{flexitheorem}{D4.3.4,T4.3.2 - $\{272\}$}[Universal conditional probability]
+    Let $P_1,P_2,\ldots$ be an enumerate of all lower semicomputable conditional probability mass functions. We define the conditional version of $\udsm(x)$ as
+    \begin{equation}
+        \udsm(x|y) := \sum_{j \leq 1}2^{-K(j)}P_j(x|y).
+    \end{equation}
+\end{flexitheorem}
+
+\begin{flexilemma}{L4.3.2 - $\{272\}$}[Negative results on $\udsm$]
+    $\udsm$ is incomputable and $\sum_x \udsm (x) < 1$.
+\end{flexilemma}
+
+\begin{flexidefinition}{D4.3.5 - $\{274\}$}[Universal a priori probability]
+    For $T$ a prefix Turing machine, we define
+    \begin{equation}
+        Q_T(x) = \sum_{T(p)=x}2^{-\ell(p)}.
+    \end{equation}
+    $Q_T(x)$ is called the \textit{halting probability of $T$ on $x$ }, but this is not really the haltin probability, as it would be more fair to use $2^{-2\ell(p)-1}$, so it is called "probability" just because the sum $\sum_x Q_T(x) \leq 1$, but one can have $\sum_x Q_T(x) = 1$ even though $T$ does not halt all the time. We define the universal a priori probability as being $Q_U$, where $U$ is a universal prefix machine.
+\end{flexidefinition}
+
+\begin{flexidefinition}{D4.3.3 - $\{275\}$}[Algorithmic probability]
+    We define the algorithmic probability as
+    \begin{equation}
+        R(x) = 2^{-K(x)}.
+    \end{equation}
+\end{flexidefinition}
+
+\begin{flexitheorem}{T4.3.3 - $\{276\}$}[Coding theorem]
+    There us a constant $c$ such that for every $x$,
+    \begin{equation}
+        \log \frac{1}{\udsm(x)} = \log \frac{1}{Q_U(x)} = K(x),
+    \end{equation}
+    with equality up to a constant $c$.
+\end{flexitheorem}
+\begin{proof}
+    Obviously, $Q_U(x) \geq R(x)$, and as $Q_U$ is lower semicomputable, $c_{Q_U}\udsm(x) \geq Q_U(x)$. Finally, with an extended version of Kraft inequality, we can prove that there is a computable prefix code $E$ such that $2^{-\ell(E(x))} \geq \udsm(x)$, then $K(x) \leq \ell(E(x))$.
+\end{proof}
+
+\begin{flexitheorem}{T4.3.4 - $\{278\}$}[Conditional coding theorem]
+    There us a constant $c$ such that for every $x$,
+    \begin{equation}
+        \log \frac{1}{\udsm(x|y)} = \log \frac{1}{Q_U(x|y)} = K(x|y),
+    \end{equation}
+    with equality up to a constant $c$.
+\end{flexitheorem}
+
+\begin{flexilemma}{L4.3.4 - $\{278\}$}[Equivalence semimeasures and halting probabilities]
+    Let $P_1,P_2,\ldots$ the enuemration of lower semicomputable semimeasures, and $Q_1,Q_2,\ldots$ the enumeration of halting probabilities. Then, there exists computable functions $f,g$ such that $Q_j = \Theta(P_{f(j)})$ and $P_j = \Theta(Q_{g(j)})$.
+\end{flexilemma}
+
+$\{279\}$ In this page, there is an amazing remark that if an outcome has many long descriptions, then it will have a short Kolmogorov complexity.
+
+\begin{flexidefinition}{D4.3.8 - $\{281\}$}[Sum-test]
+    Let $P$ be a computable discrete semimeasure on $\NN$. A sum $P$-test is a lower semicomputable function $\delta$ satisfying 
+    \begin{equation}
+        \sum_x P(x) 2^{\delta(x)} \leq 1.
+    \end{equation}
+    A universal sum $P$-test is a sum $P$-test that additively dominates each other.
+\end{flexidefinition}
+\begin{flexilemma}{L4.3.5 - $\{281\}$}[Sum $P$-tests are stronger than Martin-Löf]
+    Sum $P$-tests are $P$-tests, but the converse is not true.
+\end{flexilemma}
+
+\begin{flexitheorem}{T4.3.5 - $\{282\}$}[Universal sum $P$-test]
+    \begin{enumerate}[label = (\roman*)]
+        \item Let $P$ be a computable discrete probability distribution. Then, $\kappa_0(x|P) := \log(\udsm(x)/P(x))$ is a universal sum $P$-test.
+        \item Let $P(\cdot|y)$ be a computable conditional discrete probability distribution. Then, $\kappa_0(x|P(\cdot,y)) := \log(\udsm(x|y)/P(x|y))$ is a universal sum $P(\cdot|y)$-test.
+    \end{enumerate}
+\end{flexitheorem}
+
+\begin{flexidefinition}{D4.3.9 - $\{283\}$}[Randomness deficiency]
+    We let the randomness deficiency of $x$ wrt $P$ be
+    \begin{equation}
+        \delta(x|P) = \left\lfloor \log \frac{1}{P(x)} \right\rfloor - K(x) = \log \frac{m(x)}{P(x)} + O(1).
+    \end{equation}
+\end{flexidefinition}
+
+$\{184\}$ Sum $P$-tests are then really related to randomness deficiency measures.
+
+$\{286\}$ Cool fact $E_P[\kappa_0(x|P)] = D(P || \udsm)$.
+
+$\{287-290\}$ Universal gambling is defined via the sum-P tests, and its mindblowing properties are studied.
+
+\begin{flexidefinition}{D4.4.1 - $\{296\}$}[Worst-case and average-case time complexity]
+Let $P : \NN \to \RR_+$ be a density function, and $t(x)$ be the running time of an algorithm $A$ on inputs $x \in \NN$. The worst-case time complexity is defined as
+\begin{equation}
+    T(n) := \max \{t(x): l(x) = n \},
+\end{equation}
+and the $P$-average time complexity is 
+\begin{equation}
+    T(n|P) = \frac{\sum_{l(x)=n} P(x) t(x)}{\sum_{l(x)=n} P(x)}\cdot
+\end{equation}
+\end{flexidefinition}
+\begin{flexitheorem}{T4.4.1 - $\{296\}$}[m-Average complexity]
+    \begin{equation}
+        T(n|\udsm) = \Omega(T(n)).
+    \end{equation}
+\end{flexitheorem}
+
+$\{297\}$ Same holds with space complexity. On page $\{298\}$m there are techniques to sample from $\udsm$.
+
+\subsection{Continuous sample space}
+
+\subsubsection{Universal continuous lower semicomputable semimeasure}
+
+\begin{flexidefinition}{D4.5.1 - $\{299\}$}[Universal continuous semimeasure]
+    Let $\MM$ be a class of continuous semimeasures. A semimeasure $\mu_0$ is universal for $\MM$ if $\mu_0 \in \MM$ and for all $\mu \in \MM$ there exists a constant $c_\mu$ such that $c_\mu \mu_0(x) \geq \mu(x)$, for all $x \in \BB^\ast$.
+\end{flexidefinition}
+\begin{flexitheorem}{T4.5.1 - $\{299\}$}[Existence universal lower semicomputable continuous semimeasure]
+    There is a semimeasure $\Udsm$ that universal for the class of lower semicomputable semimeasures. In particular, we take
+    \begin{equation}
+        \Udsm (x) := \sum_{j\geq 1} 2^{-K(j)}\mu_j(x).
+    \end{equation}
+\end{flexitheorem}
+
+$\{302-303\}$ We have the same incomputability and unprobability results as for discrete measures.
+
+\subsubsection{Universal continuous prior probability}
+
+\begin{flexidefinition}{D4.5.2 - $\{303\}$}[Monotone machines]
+    A monotone machine has two one-way tapes, one read-only and one write-only, and several two-way read/write tapes. The input tape contains a one-way infinite binary sequence. The monotone machine can never halt, and hence generate an infinite sequence on its output tape.
+\end{flexidefinition}
+
+$\{303\}$ $S_\BB := \BB^\ast \cup \BB^\infty$.
+
+\begin{flexidefinition}{D4.5.3 - $\{303\}$}[Monotone functions]
+Monotone machines compute monotone functions $\psi : \{0,1\}^\ast \to S_\BB$. Each such partial function induces a mapping $\psi' : \{0,1\}^\infty \to S_\BB$.
+\end{flexidefinition}
+
+\begin{flexitheorem}{T4.5.2 - $\{306\}$}[Pushforward theorem]
+    Each semimeasure $\mu$ is lower semicomputable if and only if there is a monotone function $\psi$ such that $\mu = \lambda_\psi$, where $\lambda$ is the uniform measure.
+\end{flexitheorem}
+
+\begin{flexidefinition}{D4.5.6 - $\{307\}$}[Universal a priori probability]
+    We define the universal a priori probability as $\lambda_U$, where $U$ is the reference universal monotone machine.
+\end{flexidefinition}
+
+\begin{flexitheorem}{T4.5.3 - $\{307\}$}[Continuous Coding theorem]
+    \begin{equation}
+        \log 1/ \lambda_U(x) = \log 1/\Udsm(x) + O(1).
+    \end{equation}
+\end{flexitheorem}
+
+\subsubsection{Solomonoff normalization}
+
+\begin{flexidefinition}{D4.5.7 - $\{308\}$}[Solomonoff normalization]
+    We can define measures that multiplicatively dominates all lower semicomputable semimeasures. These measures are obviously not semicomputable, but Solomonoff argues we should still consider them. The Solomonoff normalization is the a normalization process which leaves invariant the ratio 
+    \begin{equation}
+        P(x) = \mu(x1)/\mu(x0).
+    \end{equation}
+    It is defined as follows: for a semimeasure $\mu$, consider $\mu_\norm$ as 
+    \begin{align}
+        \mu_\norm(\epsilon) &= 1\\
+        \mu_\norm(xb) &= \mu_\norm (x) \frac{\mu (xb)}{\sum_{a \in \BB} \mu (x a)}\cdot
+    \end{align}
+\end{flexidefinition}
+
+\subsubsection{Monotone complexity}
+
+\begin{flexidefinition}{D4.5.8/9 - $\{310\}$}[KM- and Km-complexities]
+    \begin{equation}
+        KM(x) := \log \frac{1}{\Udsm(x)}\cdot
+    \end{equation}
+Let $U$ be a reference universal monotone machine.
+\begin{equation}
+    Km(x) := \min \{ l(p) : U(p) =x\omega, \omega \in S_\BB\}.
+\end{equation}
+\end{flexidefinition}
+
+On pages $\{310-314\}$, the authors discuss the fact that $KM$ and $Km$ do not agree, and so there is an impossibility to assess a coding theorem in this case.
+
+\subsubsection{Integral tests}
+
+Integral test are an analogue to sum tests but in the continuous case.
+
+\begin{flexidefinition}{D4.5.10 - $\{315\}$}[Unit integrable function]
+    A function $f : \BB^\infty \to \RR_+$ is unit integrable over $X$ w.r.t $\mu$ if it is measurable and 
+    \begin{equation}
+        \int_X f d \mu \leq 1.
+    \end{equation}
+\end{flexidefinition}
+
+\begin{flexidefinition}{D4.5.11 - $\{315\}$}[Lower-semicomputable continuous-domain function]
+    A function $f : \BB^\infty to \RR_+$ is lower semicomputable if there exists $g : \NN \to \NN$ which is left prefix-nondecreasing and right-nondecreasing such that
+    \begin{equation}
+        f(\omega) = \sup_{\omega \in \Gamma_x, k \in \NN} \{ g(x,k)\}.
+    \end{equation}
+\end{flexidefinition}
+
+\begin{flexitheorem}{L4.5.7 - $\{316\}$}{Equivalence unit integrable and sequential test}
+    If $f$ is lower semicomputable unit integrable function on $\BB^\infty$ w.r.t $\mu$ then $\log f$ is a sequential $\mu$-test. Conversely, if $\delta$ is a sequential $\mu$-test, then $\delta - 2 \log \delta -c$ is a lower semicomputable unit integrable function on $\BB^\infty$ w.r.t $\mu$.
+\end{flexitheorem}
+
+\begin{flexitheorem}{D4.5.12/T4.5.6 - $\{317\}$}[Universal integral $\mu$-test ($\mu$ computable)]
+    An integral $\mu$-test is $\log f$ where $f$ is lower semicomputable unit integrable wrt $\mu$. A universal integral $\mu$-test is additively dominating all other integral $\mu$-tests. There is a universal integral $\mu$-test, defined as
+    \begin{equation}
+        \log f_0(\omega) = \sup_{n \in \NN} \left\{ \log \frac{1}{\mu(\omega_{1:n})} - K(\omega_{1:n}|\mu) \right\},
+    \end{equation}
+    whatever $K(\cdot | \mu)$ means...
+\end{flexitheorem}
+
+\subsubsection{Martingale tests}
+
+\begin{flexidefinition}{D4.5.14 - $\{321\}$}[Martingale test]
+    Let $\mu : \BB^\ast \to \RR$ be a computable measure and $\gamma : \BB^\ast \to \RR$ be nonnegative, lower semicomputable such that
+    \begin{align}
+        \mu(\epsilon)2^{\gamma(\epsilon)} \leq 1, \ i.e. \ \gamma(\epsilon) \leq 0\\
+        \mu(x)2^{\gamma(x)} \geq \sum_{b \in \BB} \mu(xb) 2^{\gamma(xb)}.
+    \end{align}
+Then, $\gamma$ is martingale $\mu$-test. A martingale $\mu$-test is universal if it additively dominates all others.
+\end{flexidefinition}
+
+As usual, martingale $\mu$-tests are $\mu$-tests, and $\mu$-tests are almost martingale $\mu$-tests (L4.5.8 - $\{322\}$).
+
+\begin{flexidefinition}{D4.5.15 - $\{322\}$}[Sequential martingale test]
+    A sequential martingale $\mu$-test is obatined from a martingale $\mu$-test $\gamma$ by defining
+    \begin{equation}
+        \delta(\omega) := \sup_{n \in \NN} \gamma(\omega_{1:n}).
+    \end{equation}
+\end{flexidefinition}
+\begin{flexitheorem}{T4.5.7 - \pp{322}}[Universal martingale tests]
+    Let $\mu : \BB^\ast \to \RR$ be a computable measure. Then,
+    \begin{enumerate}[label = (\roman*)]
+        \item $\gamma_0(x|\mu) = \log \frac{\Udsm(x)}{\mu(x)}$ is a universal martingale $\mu$-test,
+        \item $\sigma_0(\omega|\mu) = \sup_{n} \log \frac{\Udsm(\omega_{1:n})}{\mu(\omega_{1:n})}$ is a universal sequential martingale $\mu$-test.
+    \end{enumerate}
+\end{flexitheorem}
+\pp{323} Now there is a probably very important theorem:
+An infinite sequence $\omega$ is $\mu$-random iff
+\begin{equation}
+    KM(\omega_{1:n}) = Km(\omega_{1:n}) + O(1) = \log \frac{1}{\mu(\omega_{1:n})} + O(1).
+\end{equation}
+
+\subsubsection{Supermartingales}
+
+\begin{flexidefinition}{D4.5.16 - \pp{324}}[Supermartingales]
+    Let $t : \BB^\ast \to \RR_+$ such that
+    \begin{align}
+        \mu(\epsilon)t(\epsilon) &\leq 1\\
+        \mu(x)t(x) &\geq \sum_{b \in \BB} \mu(xb) t(xb).
+    \end{align}
+    Then, $t$ is called a $\mu$-supermartingale, and a $\mu$-martingale if there is equality in the conditions.
+\end{flexidefinition}
+
+\section{Inductive reasonning}
+
+$\{345\}$ Deduction vs. induction: deduction is about drawing exact conclusions from observed data. Induction tries to generalize the observed data to finding rules that govers it. In particular, deduction is a subpart of induction, as if one finds the correct generalization, then one can draw the same conclusions from induction that from deduction.
+
+$\{345\}$ Inference vs Reasonning: inference is the fact of drawing conclusions (answer yes or no) to a question without total justification. In reasonning, we do not say yes or no in the end, but we change our belief in the different alternative answers.
+
+Inductive reasonning is then the fact of generalizing data to a set of theories, that we each associate with a certain degree of belief.
+
+There are guiding principles for inductive reasonning that have been proposed by philosophers over the years:
+\begin{enumerate}[label = (\alph*)]
+    \item Epicurus: Principle of Multiple Explanations. If more than one theory is consistent with the observations, keep all theories.
+    \item Principle of indifference. A priori, we should associate to each theory an equal belief.
+    \item Occam's Razor Principle. Entities should not be multiplied beyong necessity.
+    \item Newton: Nature does nothing in vain.
+    \item Einstein: Removing one parameter was right for sure.
+    \item Bayes's rule: the belief we should put in a theory is proportional to our initial prior belief in the theory times the likelihood of the data given this theory.
+    \item Hume: induction is impossible.
+\end{enumerate}
+
+\subsection{Universal prediction}
+
+We show that the best possible general initial belief is $\Udsm(\cdot)$.
+\begin{flexitheorem}{C5.2.1 - $\{363\}$}[Convergence in difference]
+    Let $\mu$ be a computable measure. Then, for a set $A$ of $\mu$-measure 1, one has
+    \begin{equation}
+        \limi{n} |\Udsm(a|\omega_{1:n-1}) - \mu(a|\omega_{1:n-1})| = 0,
+    \end{equation}
+    for all $\omega \in A$ and $a \in \BB$.
+\end{flexitheorem}
+
+
+\begin{flexidefinition}{D5.2.3 - \pp{366}}[Conditionally bounded away measure]
+    A measure is conditionally bounded away from zero if there exists $c > 0$ such that $\mu(a|x) > c$ for all $a \in \BB$ and all $x \in \BB^\ast$.
+\end{flexidefinition}
+\begin{flexitheorem}{T5.2.2 - $\{366\}$}[Convergence in ratio]
+    Let $\mu$ be a computable measure. Then, for a set $A$ of $\mu$-measure 1, one has
+    \begin{enumerate}[label = (\alph*)]
+        \item In-sequence convergence
+    \begin{equation}
+        \limi{n} \frac{\Udsm(\omega_n|\omega_{1:n-1})}{\mu(\omega_n|\omega_{1:n-1})} = 1,
+    \end{equation}
+    for all $\omega \in A$.
+    \item Off-sequence convergence: suppose that $\mu$ is conditionally bounded away from zero. Then,
+    \begin{equation}
+        \limi{n} \frac{\Udsm(x|\omega_{1:n-1})}{\mu(x|\omega_{1:n-1})} = 1,
+    \end{equation}
+    for all $\omega \in A$ and all $x \in \BB$.
+\end{enumerate}
+\end{flexitheorem}
+
+We have prove that the likelihood with respect to any prior computable measure $\mu$ is very well estimated by the likelihood with respect to $\Udsm$.
+
+\subsubsection{Prediction by data compression}
+
+We can prove that to chose the next chunk of the sequence $\omega$, one can - almost all the time - choose it with low monotone Kolmogorov complexity. 
+
+\begin{flexitheorem}{T5.2.3 - \pp{368}}[New prediction with low Kolmogorov complexity]
+    Let $\mu$ be a semimeasure that is conditionally bounded away from zero. There is a subset $A$ of $\mu$-measure 1 such that for every $\omega \in A$, and $y \in \{0,1\}^\ast$, one has
+    \begin{equation}
+        \log \frac{1}{\mu(y|\omega_{1:n})} = Km(y\omega_{1:n}) - Km(\omega_{1:n}) + \underset{n \to \infty}{O}(1).
+    \end{equation}
+\end{flexitheorem}
+
+Interpretation: there is a constant $p>0$ such that considering an extrapolation $y \in \{0,1\}^\ast$ of $\omega_{1:n}$,  $\mu(y|\omega_{1:n}) \geq p/2^c$ if $Km(y\omega_{1:n}) - Km(\omega_{1:n})$, when $n$ is very large. Then, compressible extrapolation are associated with a bigger belief.
+
+\subsubsection{Inductive inference}
+
+Inference is the fact of finding parameters out of observed data. The model that we use here identifies the parameters in the limit, and is put in place by learning by enumeration, or learning in the limit.
+
+\subsection{Pac-learning}
+
+Consider a sample space $S$ (discrete or continuous). Its elements are called examples. A concept $c$ is a subset of $S$. We interchangeably speak about a concept and its characteristic function $f$. A concept class $\CC$ is a set of concepts. The learning algorithm draws examples from the sample space $S$ according to a fixed unknown distribution $P$.
+
+\begin{flexidefinition}{D5.3.1 - \pp{379}}[Pac-learnability]
+    A concept class $\CC$ is pac-learnable if there exists a possibly randomized learning algorithm $A$ such that for each $f \in \CC$ and $\varepsilon > 0$, algorithm $A$ halts in a finite number of steps and examples, and outputs a concept $h \in \CC$ that satisfies the following: With probability at least $1 - \varepsilon$,
+    \begin{equation}
+        \sum_{f(v) \neq h(v)} P(v) < \varepsilon.
+    \end{equation}
+    A concept class is polynomially pac-learnable if it is pac-learnable and the learning algorithm always halts within time and number of examples $p(\ell(f), 1/\varepsilon)$.
+\end{flexidefinition}
+
+\begin{flexidefinition}{D5.3.2 - \pp{379}}[Occam algorithm]
+    Let $\alpha \in [0,1)$, $\beta \geq 1$, $m$ a number of sample and $s$ the length of the smallest concept in $\CC$ consitent with the examples. An Occam algorithm is a polynomial-time algorithm that finds a hypothesis $h \in \CC$ consistent with the examples and satisfying $C(h) \leq s^\beta m^\alpha$.
+\end{flexidefinition}
+
+\begin{flexitheorem}{T5.3.1 - \pp{379}}[Occam's razor theorem]
+    A concept class $\CC$ is polynomially pac-leanable if there is an Occam algorithm for it.
+\end{flexitheorem}
+
+Interpretation: concepts that are learnable are the ones that have a Kolmogorov complexity that is close to the lowest.
+
+Many problems are intractable without having certain hypotheses on the sampling distribution.
+
+\begin{flexidefinition}{\pp{382}}[Simple distribution]
+    A distribution is said to be \textbf{simple} if it is multiplicatively dominated by $\udsm$. All lower semicomputable distributions are simple, but some simple distributions are not lower semicomputable.
+\end{flexidefinition}
+
+\begin{flexitheorem}{T5.3.2 - \pp{382}}[Universal simple pac-learning]
+    A concept class $\CC$ is polynomially pac-learnable under $\udsm$ iff it is polynomially learnable under every simple distribution $\P$, provided that in the learning phase the set of examples are drawn according to $\udsm$.
+\end{flexitheorem}
+
+\pp{386-388} Similar considerations apply for the continuous case, with however the assumption of ``polynomially'' being removed.
+
+\subsection{Minimum Description Length principle}
+
+The MDL principle is described as follows. Given samples of data, and theories to explain this data, the best theory is the one that minimizes the sum of 
+\begin{itemize}
+    \item the length of the description of the theory,
+    \item the length of the data when encoded with the help of the theory.
+\end{itemize}
+\begin{flexidefinition}{D5.4.1 - \pp{391}}[Ideal MDL]
+    The ideal MDL principle selects the hypothesis $H$ that minimizes 
+    \begin{equation}
+        K(H) + K(D|H).
+    \end{equation}
+\end{flexidefinition}
+
+\pp{392} An alternative version of the MDL principle could be to minimize $K(H|D)$.
+
+\pp{392-393} Logarithmic Bayes's rule: maximizing $Pr(H|D)$ is equivalent to minimize $\log \frac{1}{Pr(D|H)} + \log \frac{1}{P(D)}$. Generally, we assume $P(\cdot) = \udsm(\cdot)$, but we cannot assume $Pr(\cdot|H) = \udsm(\cdot|H)$, so the logarithmic Bayes's rule does not correspond to the ideal MDL principle. However, under some assumptions, we can do better.
+
+\begin{flexilemma}{L5.4.1 - \pp{394}}[Ideal MDL is equivalent to Logarithmic Bayes's rule]
+    \begin{enumerate}[label = (\roman*)]
+        \item If $P = \udsm$ then $\log 1/P(H) = K(H)$ up to an $O(1)$ additive term.
+        \item If $P$ is computable and $H$ is $P$-random, then $\log 1/P(H) = K(H)$ up to an additive term $K(P)$.
+        \item If $Pr(\cdot|H)$ is computable and $D$ is $Pr(\cdot|H)$-random, then $\log 1/Pr(D|H) = K(D|H)$ up to an additive term $K(Pr(\cdot|H))+O(1) \leq K(H) + O(1)$.
+    \end{enumerate}
+\end{flexilemma}
+
+Motivated by previous lemma, we make the following definition.
+
+\begin{flexidefinition}{D5.4.2 - \pp{396}}[Admissible hypothesis]
+    Let $D$ be a data sample and $P$ a prior probability distrobution. A hypothesis is said to be admissible if $H$ is $P$-random and $D$ is $Pr(\cdot|H)$-random.
+\end{flexidefinition}
+
+\begin{flexitheorem}{T5.4.1 - \pp{397}}[Bayes and MDL agree]
+    If $H$ is admissible for $D$ and $P$, then $H_{bayes}$ and $H_{mdl}$ are roughly equal.
+\end{flexitheorem}
+
+Pages \pp{398-405} are dedicated to many examples of application, that are a bit obscure.
+
+In \pp{405-408}, the authors address the maximum of likelihood and maximum of entropy, showing that the later it roughly equal to MDL for some simple cases.
+
+\subsection{Nonparametric statistics}
+
+\begin{flexidefinition}{D5.5.2 - \pp{410}}[Algorithmic statistic]
+    A finite set $S$ containing $x$ is called an algorithmic statistic por $x$. 
+\end{flexidefinition}
+
+\begin{flexidefinition}{D5.5.3 - \pp{410}}[Typical element]
+    A string $x$ is said to be typical element of $S$, and that $S$ is a fitting model for $x$, if the randomness deficiency $\delta(x|S) := \log d(S) - K(x|S)$ is $O(1)$.
+\end{flexidefinition}
+
+\begin{flexidefinition}{D5.5.4 - \pp{411}}[Algorithmic sufficient statistic]
+    A finite set $S$ containing $x$ is called an algorithmic sufficient statistic for $x$ if $K(S) + \log d(S) = K(x) + O(1)$ (where $O(1)$ is independant of $S$ and $x$)
+\end{flexidefinition}
+
+\begin{flexilemma}{L5.5.1 - \pp{411}}[Sufficient implies typical]
+    If $S$ is an algorithmic sufficient statistic for $x$, then $x$ is a typical element of $S$.
+\end{flexilemma}
+
+\begin{flexidefinition}{\pp{412}}[Model selection]
+    Let $x$ a string. For $S$ a set, we define
+    \begin{enumerate}[label=(\alph*)]
+        \item the simplicity $K(S)$,
+        \item the typicality $\delta(x|S)$,
+        \item the shortness $\Lambda(S) := K(S) + \log d(S)$.
+    \end{enumerate}
+    We define an order relation of sets that contain $x$ as
+    \begin{equation}
+        S_0 \leq S_1
+    \end{equation}
+    if $K(S_0) \leq K(S_1)$, $\delta(x|S_0)\leq \delta(x|S_1)$ and $\Lambda(S_0) \leq \Lambda(S_1)$.
+\end{flexidefinition}
+
+The author now proposes estimators based on the different tools provided by nonprobabilistic statistics. 
+
+\begin{flexidefinition}{D5.5.5 - \pp{412}}[Best-fit estimator]
+    Best-fit refers to the precise notion of fittingness of the model (i.e. the data is typical w.r.t. the model). 
+    \begin{equation}
+        \beta_x(i) = \min_S \{\delta(x|S): S \ni x, K(S) \leq i\}
+    \end{equation}
+\end{flexidefinition}
+
+\begin{flexidefinition}{D5.5.6 - \pp{413}}[Maximum likelihood estimator]
+    We define it as
+    \begin{equation}
+        h_x(i) = \min_S \{\log d(S): S \ni x, K(S) \leq i \}.
+    \end{equation}
+\end{flexidefinition}
+
+\begin{flexidefinition}{D5.5.6 - \pp{415}}[MDL estimator]
+    We define it as
+    \begin{equation}
+        \lambda_x(i) = \min_S \{\Lambda(S): S \ni x, K(S) \leq i \}.
+    \end{equation}
+\end{flexidefinition}
+
+The authors then establish different relations between the functions.
+
+\subsection{MDL principle}
+
+\begin{flexidefinition}{D5.5.9 - \pp{422}}[MDL algorithm]
+    Let $x$ be a data sample. Let $A$ be an algorithm that, given $x$ and $i \leq l(x) + O(\log l(x))$ produces a finite sequence of pairs $(p_t,S_t)$ such that $x \in S_t$ and $p_t$ is a program for $S_t$. If $l(p_t) + \log d(S_t) < l(p_{t-1}) + \log d(S_{t-1})$, then $A$ is an MDL algorithm.
+\end{flexidefinition}
+There are then many discussions on why the MDL algorithm can be implemented in practice, but will not necessarily converge to a model that witnesses the best-fit estimator, at least in terms of a certain approximation measure. They justify that we do not care because: "We want a good model rather than a number that measures its goodness" Basically, they just want a model that always improves rather than a model that is expected to improve towards a good model.
+
+
+\bibliography{biblio}{}
+\bibliographystyle{alpha}
+
+\end{document}
