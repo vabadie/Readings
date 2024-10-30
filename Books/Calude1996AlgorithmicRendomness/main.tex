@@ -1,0 +1,197 @@
+\documentclass{article}
+
+\usepackage{math_packages}
+\usepackage{user_commands}
+
+
+
+\begin{document}
+\begin{center}
+    \textbf{Calude, Hertling, Hoelzl synthesis}
+\end{center}
+
+
+\section{Calude - Information and Randomness book}
+
+Questions :
+\begin{enumerate}
+    \item what is a Chaitin computer? OK
+    \item what is null-free data ? OK
+    \item what is $U_\lambda,M_\lambda,C_\lambda$ ? OK
+    \item why is $\dom{U_\lambda}$ c.e. ? OK
+    \item what is $H_M$, $H_U$? OK
+\end{enumerate}
+
+$\{1\}$ In this book, the empty string is $\lambda$ !! Also, $\log n := \lfloor \log_2 (n+1) \rfloor$. $p|q$ means $p$ divides $q$. $\{2\}$ We denote by $\stringQ{n}$ the $n$-th element in the quasi-lexicographical ordering of $A_Q^\ast := \{0,\ldots, Q-1\}^\ast$. We denote $A_Q^+ := A_Q^\ast\backslash \{\lambda\}$. When it is clear, we write $\stringnone{not}$ instead of $\stringQ{not}$. Note that $|\stringQ{n}| := \lfloor\log_Q(n(Q-1)+1) \rfloor$. Prefix-order : $x <_p y$ indicates that there exists $z \in \{0,1\}^\ast$ s.t. $y = xz$. Concatenation of $x$ and $y$ is denoted by $xy$, for two sets $S$ and $T$, define $ST := \{xy : x\in S,y \in T \}$. 
+$\{3\}$ $A_Q := \{0,1,\ldots, Q-1\}$. $(n)_Q$ is the bases $Q$ representation of $n$ (watch out: $\stringQ{n} \neq (n)_Q$). $A_Q^\omega$ is the set of infinite sequences of $A_Q$. Elements of $A_Q^\omega$ are written in boldface, i.e. ${\bf x} \in A_Q^\omega$. ${\bf x}(n) := x_1 \ldots x_n$. We define, for $S \subseteq A_Q^\ast$, $S A_Q^\omega := \{ {\bf x} \in A_Q^\omega : {\bf x}(n) \in S \ for \ some \ n\geq 1\}$, $x A_Q^\omega := \{x\} A_Q^\omega$. Important: $f \overset{+}{\prec} g$ means $f \leq g + O(1)$. If $f \overset{+}{\prec} g$ and $g \overset{+}{\prec} f$, we write $f \simeq g$. We write $\varphi : X \overset{o}{\to} Y$ for partial functions, and $\varphi : X \to Y$ for total functions. The range of a function is denoted $\range \varphi := \{ \varphi(x): x \in \dom \varphi \}$. Two partial functions $\varphi,f$ are equal if $\dom \varphi = \dom f$, and $\varphi(x) = f(x)$ for all $x \in \dom \varphi$.
+
+\subsection{Computability theory}
+
+He reviews basis topics in computability theory.
+
+\subsection{Definitions of Kolmogorov complexity}
+
+Fix a universal computer $\psi$ and a universal Chaitin computer $U$.
+
+\begin{definition}$\{36\}$ (Kolmogorov-Chaitin absolute complexity)
+    Let $\varphi$ be a computer. We define the partial function $K_\varphi : A_Q^\ast \oto \NN$, as 
+    \begin{equation}
+        K_\varphi := \min \left\{ |u| : u \in A_Q^\ast, \varphi(u,\lambda) = x \right\}.
+    \end{equation}
+    We put $K(x) := K_\psi(x)$.
+\end{definition}
+
+\begin{definition}$\{36\}$ (Chaitin self-delimiting absolute complexity)
+    Let $C$ be a Chaitin computer. We define the partial function $H_C: A_Q^\ast \oto \NN$, as 
+    \begin{equation}
+        H_C := \min \left\{ |u| : u \in A_Q^\ast, \varphi(u,\lambda) = x \right\}.
+    \end{equation}
+    We put $H(x) := H_U(x)$.
+\end{definition}
+
+\begin{definition}$\{37\}$
+    The canonical program defined with respect to the Chaitin universal computer $U$ is 
+    \begin{equation}
+        x^\ast = \min \left\{ u \in A_Q^\ast : U(u,\lambda) = x\right\},
+    \end{equation}
+    where the minimum is taken with respect to the shortlex (quasilexicographical) ordering.
+\end{definition}
+
+$\{37\}$ Thermodynamic cost ???
+
+\begin{lemma}
+    $K(x) \leq K_\varphi + c_\varphi$, $H(x) \leq H_C(x) + c_C$, for all $x \in A_Q^\ast$.
+\end{lemma}
+
+\begin{definition}
+    Let $f : X \times Y \to S$ be a function. $f_x := f(\cdot,x)$ is called the section of $f$ at $x$.
+\end{definition}
+\begin{lemma}
+    
+\end{lemma}
+
+
+\subsection{Answers to the questions}
+
+
+\subsubsection{Question 1: what is a Chaitin computer?}
+\begin{definition} $\{35\}$ (Chaitin computer)
+    A computer is a p.c. function $\varphi : A^\ast \times A^\ast \to A^\ast$. A Chaitin computer is computer $C$ such that for every $v \in A^\ast$, $\dom{C(\cdot,v)}$ is prefix-free.
+\end{definition}
+
+For specifications on how a prefix-free turing machine can be defined explicitely, see pages $\{35-36\}$ ! However, it it unclear how these machines can receive multiple inputs.
+
+\begin{definition} $\{36\}$ (Universal Chaitin computer)
+    A (Chaitin) computer $\psi$ is universal if for each (Chaitin) computer $\varphi$, there is a constant $c$ (depending on $\psi,\varphi$) with the following property. If $\varphi(x,v) < \infty$, there exists $x'$ such that $\psi(x',v) = \varphi(x,v)$ and $|x'| \leq |x| + c$.
+\end{definition}
+Remark: in Li (2008), this corresponds (almost) to the definition of additively optimal self-delimiting universal computable function.
+
+\begin{theorem} $\{36\}$ (Existence of universal Chaitin computer)
+    There (effectively) exists a (Chaitin) universal computer.
+\end{theorem}
+
+\subsubsection{ Question 2: what is null-free data?}
+
+It just means that we compute the probability of halting with no advice, i.e. the probability of halting of $x \mapsto U(\lambda, x)$.
+
+
+\subsubsection{ Question 3: what are $U_\lambda,M_\lambda,C_\lambda$?}
+
+The subscriopt $\lambda$ denotes the section of the functions $U,M,C$, that are functions from $A_Q^\ast \times A_Q^\ast$. Hence $U_\lambda := U(\lambda,\cdot)$. 
+
+I guess that $U$ is the fixed universal Chaitin computer, $C$ is a Chaitin computer, and for $M$, on page $\{80\}$ it seems to be also a Chaitin computer.
+
+\subsubsection{ Question 4: why is $\dom{U_\lambda}$ c.e. ?}
+
+I am stupid, it is just the definition of c.e. sets.
+
+
+\subsubsection{ Question 5: what is $H_M$, $H_U$?}
+
+$H_M$, $H_U$ are according to the definition of Chaitin self-delimiting absolute complexity.
+
+
+\subsection{Proof that $\Omega_U$ is random!}
+
+Let 
+\begin{equation}
+    \Omega_U := \sum_{u \in \dom U_\lambda} Q^{-|u|}. 
+\end{equation}
+In the book, they take $\rf_q(\Omega_U) = \Omega_1\Omega_2\ldots$ to be the ``non-terminating $Q$-ary expansion'' of $\Omega_U$, which in my own words stands for the lazy $Q$-expansion. The Chaitin theorem asserts that $\rf_q(\Omega_U)$ is random.
+
+\begin{theorem}
+    $\rf_q(\Omega_U)$ is random.
+\end{theorem}
+We decompose it in three lemmas. Fix an injective computable function $f : \NN \to \dom U$ ($f$ exists because $\dom U$ is computably enumerable by definition), and the sequence
+\begin{equation}
+    \omega_k := \sum_{i=1}^k Q^{-|f(i)|}, \ \forall k \in \NN.
+\end{equation}
+Obviously, $\limi{k} \omega_k = \Omega_U$.
+\begin{lemma}
+    Let $n,k \in \NN$, such that $\omega_k \geq 0.\Omega_1\Omega_2\ldots\Omega_n$. Then,
+    \begin{equation}
+        |f(i)| \geq n, \ \forall i \geq k + 1.
+    \end{equation}
+\end{lemma}
+\begin{proof}
+    Let $n,k \in \NN$, such that $\omega_k \geq 0.\Omega_1\Omega_2\ldots\Omega_n$. Note that 
+    \begin{equation}
+        \limi{i} \omega_i = \omega_k + \sum_{i=k+1}^\infty Q^{-|f(i)|} = \Omega_U \leq 0.\Omega_1\Omega_2\ldots\Omega_n + Q^{-n}.
+    \end{equation}
+    Then,
+    \begin{equation}
+        \sum_{i=k+1}^\infty Q^{-|f(i)|} \leq 0.\Omega_1\Omega_2\ldots\Omega_n + Q^{-n} - \omega_k \leq Q^{-n}.
+    \end{equation}
+    Therefore, no term in the sum $\sum_{i=k+1}^\infty Q^{-|f(i)|}$ exceeds $Q^{-n}$, i.e. $ |f(i)| \geq n, \ \forall i \geq k + 1$. 
+\end{proof}
+\begin{lemma}
+    Let $n,k \in \NN$, such that $\omega_k \geq 0.\Omega_1\Omega_2\ldots\Omega_n$, and let $x \in A_Q^\ast$, and suppose that $x \notin \{U(f(1)), U(f(2)), \ldots, U(f(k))\}$. Then,
+    \begin{equation}
+        H_U(x) \geq n.
+    \end{equation}
+\end{lemma}
+\begin{proof}
+    First note that
+    \begin{align}
+        H_U(x) &:= \min \{|p| : U(p) = x\}\\
+        & \overset{(a)}{=}  \min \{|f(i)| : U(f(i)) = x\}\\
+        & \overset{(b)}{=} \min \{|f(i)| : U(f(i)) = x, i \geq k + 1\},
+    \end{align}
+    where (a) is because $f$ enumerates $dom(U)$, and\\ (b) is because $x \notin \{U(f(1)), U(f(2)), \ldots, U(f(k))\}$.
+    By previous Lemma, $|f(i)| \geq n$ for all $i \geq k + 1$, so
+    \begin{equation}
+        H_U(x) = \min \{|f(i)| : U(f(i)) = x, i \geq k + 1\} \geq n.
+    \end{equation}
+\end{proof}
+We next define a computable function that builds such an $x$, computably from $\Omega_1 \Omega_2\ldots\Omega_n$. 
+\begin{enumerate}
+    \item enumerate $k = 1,2, \ldots$ until $\omega_k \geq 0. \Omega_1\Omega_2\ldots\Omega_n$ (it will stop as $\limi{k}\omega_k = \Omega_U$)
+    \item Compute $U(f(1))$, $U(f(2))$, \ldots, $U(f(n))$
+    \item Choose $x$ as not belonging to $\{U(f(1)), U(f(2)), \ldots, U(f(k))\}$, let say take $x$ to be the quasi-lexicographically smallest word not belonging to $\{U(f(1)), U(f(2)), \ldots, U(f(k))\}$.
+\end{enumerate}
+\begin{lemma}
+    As the procedure above is computable, we deduce that $H_U(\Omega_1 \Omega_2\ldots\Omega_n) \geq H_U(x) + O(1)$. The theorem directly follows.
+\end{lemma}
+
+\subsection{Base in variance of randomness}
+
+So now, we have proven that there is at least one random real number, in every base $Q \in \NN$. Now, is this randomness a base invariant, for $Q \in \NN$?
+
+$\{240\}$ First, the author acknowleges that he makes the choice of confining himself to natural positional representations. 
+
+$\{240\}$ The author says that it must be intuitively true, as changing from a base to another should know "prefer" some digits to another, and hence not destroy randomness, and second, that if randomness was destroyed, then there would be no inverse (computable) base transform. The whole problem, as the author says, is that there is no continuous computable transform that carries a number from some base to another (but for $\beta$-expansions there is (I guess, by the one I have defined) !)
+
+$\{241\}$ The author announces the theorem (invariance of randomness through base representation), and proceeds to the proof. He defines the \textit{value} $v_Q$ similarly as equivalent to my $\delta_Q$. He the defines $\rf_Q$ as being the inverse of $v_Q$ on $\II = (0,1)\backslash\QQ$.
+
+For the proof, he basically defines a function $\Gamma$ to convert a sequence in base $Q+1$ to a seqeunce in base $Q$, that is computable and ``almost'' injective. I thinl that there is also something related to prefix-freeness of that function.
+
+\section{Hertling - Randomness spaces}
+
+
+
+
+
+\bibliography{biblio}{}
+\bibliographystyle{alpha}
+
+\end{document}
