@@ -1,13 +1,121 @@
-\documentclass{article}
+\documentclass[12pt]{article}
 
-\usepackage{math_packages}
-\usepackage{user_commands}
-
+\usepackage{latexbase}
+\usepackage{latexscience}
+\usepackage{custom_commands}
 
 
 \begin{document}
 
-Hello \cite{li2008kolmogorov}
+\begin{center}
+    \bf
+    Synthesis of Computability and Analysis
+\end{center}
+
+This report is about summarizing the book \cite{brattka2018computability}.
+
+\section{Introduction and notation}
+
+\begin{itemize}
+    \item $\N = \{0,1,2,\ldots\}$. Identification of real numbers with $0 = \varnothing$ and $n+1 = \{0,\ldots,n\}$. $X^0 = \{\varnothing\} = 1$.
+    \item $f : \subseteq X\rightrightarrows Y := (\Phi,X,Y)$ is a partial multi-valued function, and $\Phi \subseteq X \times Y$. The inverse is defined as $f^{-1} = ( \Phi^{-1},X,Y)$, where $\Phi^{-1} = \{ (y,x) : (x,y) \in \Phi\}$.
+    \item $f(x) = g(x)$ means that either both $f(x)$ and $g(x)$ are defined and equal, or that they are both undefined.
+    \item A word over $X$ is a partial function $w : \subseteq \N \to X$ such that $\dom(w) = \{0, \ldots, n-1\}$ for some $n \in \N$.
+    \item $\varepsilon = (\varnothing, \N, X)$ is identified with $\varnothing = 0$.
+    \item for $u,v \in X^\ast$, $u \sqsubseteq v$ means that $\graph(u) \subseteq \graph(v)$
+    \item for $p \in X^\N$, we write $p|_n := p(0)\ldots p(n) \in X^\ast$. For words, our terminology allows to define $p|_n$ even if $n$ is bigger than the size of the word.
+    \item $\hat a := a^\N := aaa\ldots$.
+    \item A preorder $\leq$ is a relation such that is reflexive and transitive. A partial order is a preoder that is anti-symmetric.
+    \item A equivalence relation $\equiv$ is a reflexive, transitive and symmetric relation. We naturally defined the equivalence classes in the usual meaning.
+    \item From any preorder, one can define an equivalence relation by saying $x \equiv y$ if and only if $x \leq y$ and $y \leq x$. A preorder induces a partial order on $X / \equiv$. 
+    \item In an partially ordered set $(X,\leq)$, we say that $x,y \in X$ have a supremum or a join $\sup(x,y) = x \vee y \in X$, if $x \leq \sup(x,y)$ and $y \leq \sup(x,y)$, and for all $z \in X$ satisfying $x \leq z$ and $y \leq z$, then $\sup(x,y) \leq z$. Similar definition with infinimum of meet $\inf, \wedge$. We say that $(X,\leq)$ is an upper semi-lattice if every pair of elements have a join, and a lower semi-lattice if every pair of elements has a meet. A lattice is both an upper semi-lattice and a lower semi-lattice.
+    \item An upper semi-lattice is called distributive if for all $x,y,z \in X$,
+    \[ x \leq y \vee z \Rightarrow x = y' \vee z',\]
+    for some $y'\leq y,z'\leq z$. If it is a lattice, then we call it distributive if 
+    \[ x \wedge (y \vee z) = (x \wedge y) \vee (x \wedge z).\] 
+    \item A map $f : X \to Y$ on preordered sets $(X,\leq_X)$ and $(Y,\leq_Y)$ is called monotone if $x \leq_X y$ implies $f(x) \leq_Y f(y)$.
+    \item A map $C : X \to X$ on a preordered set $(X,\leq)$ is called a closure operator if it is extensive, monotone and idempotent. Interior operator satisfies contrary definitions.
+    \item Let $X,Y$ be preordered sets, $U: X \to Y$ and $L:Y \to X$. $(L,U)$ is called a Galois connection if 
+    \[ L(y) \leq x \Leftrightarrow y \leq U(x).\]
+\end{itemize}
+
+
+\section{Computability and limit computability}
+
+Turing machines are considered to be operating on $\N$ (in the cells).
+\begin{flexidefinition}{D2.1.1 - \pp{10}}[Discrete computable function]
+    A function $f : \subseteq \N^\ast \to \N^\ast$ is called computable if there is a Turing machine that halts on every $w\in \dom(f)$ and produces $f(w)$ on the output tape. Also, this Turing machine must not halt on $w \notin \dom(f)$.
+\end{flexidefinition}
+
+\begin{flexidefinition}{D2.1.2 - \pp{10}}[Computably enumerable and computable sets]
+    Let $A \subseteq \N^\ast$. $A$ is called computably enumerable if $A = \dom(f)$ for some computable function. $A$ is computable or decidable if $A$ and $\N^\ast \backslash A$ are c.e.
+\end{flexidefinition}
+
+\begin{flexidefinition}{D2.1.3 - \pp{11}}[Computable function]
+    A function $F : \subseteq \N^\N \to \N^\N$ is called computable if there exists a Turing machine with one-way output tape such that on input $p \in \dom(F)$, it produces $F(p)$ on the output tape in the long run.
+\end{flexidefinition}
+
+\begin{flexilemma}{P2.1.4 - \pp{11}}[Restriction]
+    $F|_A$ is computable if $F$ is computable.
+\end{flexilemma}
+
+\begin{flexilemma}{P2.1.5 - \pp{11}}[Composition]
+    $G \circ F$ is computable if $F,G$ are computable.
+\end{flexilemma}
+
+\begin{flexilemma}{P2.1.6 - \pp{11}}[Computable points]
+    $p \in \N^\N$ is computable if and only if the constant function $c: \N^\N \to \N^\N$ with value $p$ is computable.
+\end{flexilemma}
+
+\begin{flexilemma}{P2.1.7 - \pp{11}}[Computable invariance]
+    Let $F$ computable and $p \in \dom(F)$ is computable. Then, $F(p)$ is computable.
+\end{flexilemma}
+
+The topology we consider on $\N^\N$ is the product of the discrete topology on $\N$, i.e. generated by the cylinder sets $n_1n_2\ldots n_k \N^\N$.
+\begin{flexitheorem}{T2.1.9 - \pp{14}}[Continuity theorem]
+    Any computable function $F : \subseteq \N^\N \to \N^\N$ is continuous.
+\end{flexitheorem}
+
+\begin{flexidefinition}{D2.1.10 - \pp{14}}[Tupling functions]
+    \begin{enumerate}[label = (\roman*)]
+        \item for $n,k \in \N$, $\langle n,k \rangle$ denotes the Cantor pairing function,
+        \item for $p,q \in \N^\N$, $\langle p,q \rangle \in \N^\N$ is defined as 
+        \begin{align*}
+            \langle p,q \rangle(2n) := p(n)\\
+            \langle p,q \rangle(2n+1) := q(n)
+        \end{align*}
+        \item for $p_0,p_1,\ldots \in \N^\N$, $\langle p_1,p_2,\ldots \rangle \in \N^\N$ is defined as 
+        \[ \langle p_1,p_2,\ldots \rangle (\langle n,k \rangle) := p_n(k)
+        \]
+        \item for $n \in \N$ and $p \in \N^\N$, $\langle n,p \rangle := np$.
+    \end{enumerate}
+\end{flexidefinition}
+
+Example 2.1.11 in page \pp{15} gives many examples of computable functions, based on the pairing functions.
+
+Example 2.1.12 in page \pp{15} gives the definition of the limit map, that is not continuous,
+\[
+    \lim : \subseteq \N^\N \to \N^\N, \langle p_0,p_1,p_2,\ldots \rangle \mapsto \limi{i} p_i.
+\]
+
+\begin{flexidefinition}{D2.1.13 - \pp{15}}[Computable sequence]
+    A sequence $(p_i)_{i \in \N}$ of elements $p_i \in \N^\N$ is called computable if $\langle p_1,p_2,\ldots \rangle$ is computable.
+\end{flexidefinition}
+
+\begin{flexidefinition}{D2.1.14 - \pp{16}}[Parallelization]
+    Let $F : \subseteq \N^\N \to \N^\N$ be a function. Then, the parallelization $\langle \hat F \rangle : \subseteq \N^\N \to \N^\N$ of $F$ is defined by 
+    \[
+        \langle \hat F \rangle \langle p_1,p_2,\ldots \rangle := \langle F(p_1),F(p_2),\ldots \rangle
+    \]
+    for every sequence $p_i$ in $\dom F$.
+\end{flexidefinition}
+
+\begin{flexilemma}{P2.1.15 - \pp{16}}[Computable parallelization]
+    If $F : \subseteq \N^\N \to \N^\N$ is computable, then its parallelization $\langle \hat F \rangle : \subseteq \N^\N \to \N^\N$ is computable too.
+\end{flexilemma}
+\begin{flexilemma}{C2.1.16 - \pp{16}}[Sequential invariance]
+    If $F : \subseteq \N^\N \to \N^\N$ is computable, and $(p_i)$ be a computable sequence in $\dom(F)$. Then, $(F(p_i))$ is computable too.
+\end{flexilemma}
 
 \bibliography{biblio}{}
 \bibliographystyle{alpha}
